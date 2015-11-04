@@ -71,7 +71,6 @@ gulp.task 'watch',->
     .pipe(coffee({bare: true}).on('error', (err)->
       console.log "#{err.name}:\"#{err.message}\" in #{err.filename}:#{err.location.first_line}"
     ))
-    .pipe(gulp.dest(dest))
     .pipe(gulp.dest(js_dest))
     .pipe(browserSync.reload({stream:true}))
     console.log path + ' was changed'
@@ -82,7 +81,6 @@ gulp.task 'watch',->
     .pipe(browserSync.reload({stream:true}))
     console.log path + ' was changed'
   watch(scss_source).on 'change',(path) ->
-    dest = "_site/" + css_dest
     gulp.src(path)
       .pipe(compass({
         css: css_dest

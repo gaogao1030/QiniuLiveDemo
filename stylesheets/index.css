@@ -1,0 +1,22 @@
+.live-area {
+  margin: 20px auto;
+  text-align: center;
+  min-width: 1000px;
+}
+
+#printWall {
+  display: inline-block;
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid #c2c2c2;
+  border-radius: 4px;
+  height: 680px;
+  width: 100%;
+  text-align: left;
+}
+
+.chat-area {
+  max-width: 360px;
+  width: 30%;
+  display: inline-block;
+}

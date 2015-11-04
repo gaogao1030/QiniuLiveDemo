@@ -9,6 +9,7 @@
 <!-- Bootstrap -->
 <link href="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 <link href="/bower_components/video.js/dist/video-js.min.css" rel="stylesheet">
+<link href="/stylesheets/index.css" rel="stylesheet">
 <!--<link href="http://vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">-->
 <script src="http://cdn.staticfile.org/underscore.js/1.7.0/underscore-min.js"></script>
 <script src="https://cdn1.lncld.net/static/js/av-mini-0.5.5.js"></script>
@@ -19,6 +20,7 @@
 <script src="/javascript/videojs-media-sources.js"></script>
 <script src="/javascript/videojs.hls.min.js"></script>
 <script src="/javascript/teaParty.js"></script>
+<script src="/javascript/initPlayer.js"></script>
 
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
@@ -31,8 +33,17 @@ html5shiv.min.js"></script>
 <![endif]-->
 </head>
 <body>
-<video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360" data-setup='{}'>
-  <source src="rtmp://pili-publish.live.youyu.im/cimu/test?key=35082b37" type='rtmp/mp4'/>
-</video>
+<div class="live-area">
+  <div class="video-area">
+    <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
+      <source src="rtmp://pili-publish.live.youyu.im/cimu/test?key=35082b37" type='rtmp/mp4'/>
+    </video>
+  </div>
+  <div class="chat-area">
+    <div id="printWall"></div>
+    <input class="chat-input form-control" type="text">
+  </div>
+</div>
+
 </body>
 </html>
