@@ -16,6 +16,8 @@
 <script src="/bower_components/leancloud-realtime/dist/AV.realtime.min.js"></script>
 <script src="/bower_components/video.js/dist/video.min.js"></script>
 <script src="http://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/jquery-dateFormat/1.0/jquery.dateFormat.min.js"></script>
+<script src="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <!-- script src="http://vjs.zencdn.net/4.10/video.js"></script>-->
 <script src="/javascript/videojs-media-sources.js"></script>
 <script src="/javascript/videojs.hls.min.js"></script>
@@ -34,16 +36,46 @@ html5shiv.min.js"></script>
 </head>
 <body>
 <div class="live-area">
-  <div class="video-area">
-    <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
-      <source src="rtmp://pili-publish.live.youyu.im/cimu/test?key=35082b37" type='rtmp/mp4'/>
-    </video>
-  </div>
+  <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
+    <source src="http://foodsound.qiniudn.com/video/introducing_thinglist.mp4" type='video/mp4'>
+  </video>
   <div class="chat-area">
     <div id="printWall"></div>
-    <input class="chat-input form-control" type="text">
+    <div class="input-group">
+      <input id="chatInput" class="form-control" type="text">
+      <span class="input-group-addon btn" id="btnSend">发送</span>
+    </div>
   </div>
+
 </div>
 
+<div class="modal fade" id="changeName" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">为了验证你的真实信息请输入真实姓名</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="nickName" class="control-label">真实姓名:</label>
+          <input type="text" class="form-control" id="inputNickName">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" id="confirmName" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var appid  = "2PKFqnCxPQ8DWMK2uiRWsQpz"
+    var secret = "Db8UOjtkzPgG1RrRHJSOPfth"
+    chat_demo.start(appid,secret);
+  })
+</script>

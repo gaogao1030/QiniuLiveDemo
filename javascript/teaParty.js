@@ -1,6 +1,4 @@
-var app_id, authFun, bindEvent, cleart_members, click_member, clientIdToMember, close_connect, connect, elements, encodeHTML, formatTime, getLog, get_conversation, get_element, get_member, get_online_members, main, members, msgTime, originClientId, pressEnter, rerender_members_list, roomname, secret_key, sendMsg, showLog, showMsg, start, timeoutPromise;
-
-elements = {};
+var app_id, bindEvent, clear_members, client_id, close_connect, connect, elements, encodeHTML, formatTime, getLog, get_conversation, get_member, get_online_members, main, member_name, msgTime, newRoom, pressEnter, roomname, secret_key, sendMsg, showLog, showMsg, start, timeoutPromise;
 
 app_id = void 0;
 
@@ -8,65 +6,34 @@ secret_key = void 0;
 
 msgTime = void 0;
 
-roomname = "teaParty-demo";
+roomname = "qiniuLiveDemo";
+
+member_name = void 0;
+
+newRoom = void 0;
+
+client_id = "游客";
 
 this.chat_demo = {};
 
-members = [
-  {
-    clientId: "leancloud",
-    name: "leancloud"
-  }, {
-    clientId: "1",
-    name: "爱丽丝"
-  }, {
-    clientId: "2",
-    name: "亚瑟王"
-  }, {
-    clientId: "3",
-    name: "特斯拉"
-  }, {
-    clientId: "4",
-    name: "爱因斯坦"
-  }, {
-    clientId: "5",
-    name: "绅士君"
-  }, {
-    clientId: "6",
-    name: "超人"
-  }, {
-    clientId: "7",
-    name: "变态君"
-  }, {
-    clientId: "8",
-    name: "咖啡君"
-  }, {
-    clientId: "9",
-    name: "多啦A梦"
-  }, {
-    clientId: "10",
-    name: "金闪闪"
-  }
-];
+elements = {};
 
 start = function(appid, secret_key) {
+  elements = {
+    body: $("body"),
+    printWall: $("#printWall"),
+    sendMsgBtn: $("#btnSend"),
+    inputSend: $("#chatInput"),
+    inputNickName: $("#inputNickName"),
+    confirmName: $("#confirmName"),
+    changeName: $("#changeName")
+  };
   AV.initialize(appid, secret_key);
-  roomname = "teaParty-demo";
+  roomname = "qiniuLiveDemo";
   app_id = appid;
   secret_key = secret_key;
-  get_element();
   return get_conversation().then(function(conv_id) {
-    return connect(roomname, conv_id, "leancloud").then(function(rt, room) {
-      return get_member(rt, room).then(function(client_id) {
-        return close_connect(rt).then(function() {
-          if (client_id !== void 0) {
-            return main(roomname, conv_id, client_id);
-          } else {
-            return showLog('该茶会人已经满了,请过会来');
-          }
-        });
-      });
-    });
+    return main(roomname, conv_id, client_id);
   }, function(err) {
     return console.log("Error: " + error.code + " " + error.message);
   });
@@ -77,28 +44,12 @@ connect = function(roomname, conv_id, client_id) {
   rt = AV.realtime({
     appId: app_id,
     clientId: roomname + ":" + client_id,
-    secure: false,
-    auth: authFun
+    secure: false
   });
   promise = new AV.Promise;
   rt.on('open', function() {
     return rt.room(conv_id, function(obj) {
-      if (obj) {
-        return promise.resolve(rt, obj);
-      } else {
-        return rt.room({
-          name: roomname,
-          attr: {
-            room_id: roomname
-          },
-          members: [roomname + ":leancloud"]
-        }, function(obj) {
-          conv_id = obj.id;
-          return close_connect(rt).then(function() {
-            return promise.resolve(rt, obj);
-          });
-        });
-      }
+      return promise.resolve(rt, obj);
     });
   });
   return promise;
@@ -114,14 +65,6 @@ close_connect = function(rt) {
   return promise;
 };
 
-get_element = function() {
-  elements.body = $("body");
-  elements.printWall = $("#print_wall");
-  elements.sendMsgBtn = $("#basic-addon2");
-  elements.vister_list = $("#vister_list");
-  return elements.inputSend = $("#input_send");
-};
-
 get_conversation = function() {
   var conv, promise, q;
   promise = new AV.Promise;
@@ -134,7 +77,7 @@ get_conversation = function() {
       conv_id = ((ref = response[0]) != null ? ref.id : void 0) || "null";
       return promise.resolve(conv_id);
     },
-    error: function() {
+    error: function(err) {
       return promise.reject(err);
     }
   });
@@ -142,48 +85,37 @@ get_conversation = function() {
 };
 
 bindEvent = function(rt, room) {
-  elements = elements;
   elements.body.on('keydown', function(e) {
     return pressEnter(e, room);
   });
   elements.sendMsgBtn.on('click', function() {
-    return sendMsg(room);
+    return sendMsg();
   });
-  return $(document).on('click', '.member', click_member);
-};
-
-click_member = function(e) {
-  return alert($(this).html());
-};
-
-rerender_members_list = function(rt, client_id, data) {
-  var j, range, ref, results, vister_list;
-  vister_list = elements.vister_list;
-  vister_list.html("");
-  range = (function() {
-    results = [];
-    for (var j = 0, ref = parseInt(data.length / 20); 0 <= ref ? j <= ref : j >= ref; 0 <= ref ? j++ : j--){ results.push(j); }
-    return results;
-  }).apply(this);
-  return _.each(range, function(i) {
-    var p_data;
-    p_data = data.slice(i * 20, (i + 1) * 20);
-    rt.ping(p_data, function(list) {
-      return _.each(list, function(d) {
-        var member, name, template;
-        d = originClientId(d);
-        member = clientIdToMember(d);
-        name = member.name;
-        if (d === client_id) {
-          name = member.name + "(我)";
-        }
-        template = '<a href="javascript:void(0)"><div class="member" >' + name + '</div></a>';
-        return vister_list.append(template);
-      });
-    });
-    if (data.length > 50) {
-      return room.remove(data[1], function() {
-        return showLog('人数过多驱逐出去的是', data[1]);
+  elements.inputSend.on('click', function() {
+    if (client_id === "游客") {
+      return elements.changeName.modal("show");
+    }
+  });
+  return elements.confirmName.on("click", function() {
+    var printWall;
+    client_id = elements.inputNickName.val();
+    printWall = elements.printWall;
+    if (!String(client_id).replace(/^\s+/, '').replace(/\s+$/, '')) {
+      return alert("昵称不能为空");
+    } else {
+      return get_conversation().then(function(conv_id) {
+        return connect(roomname, conv_id, client_id).then(function(rt, room) {
+          newRoom = room;
+          return room.join(function() {
+            printWall.scrollTop(printWall[0].scrollHeight);
+            if (client_id !== "游客") {
+              showLog('你已经可以发送消息了。');
+            }
+            return elements.changeName.modal('hide');
+          });
+        });
+      }, function(err) {
+        return console.log("Error: " + error.code + " " + error.message);
       });
     }
   });
@@ -191,60 +123,50 @@ rerender_members_list = function(rt, client_id, data) {
 
 showLog = function(msg, data, isBefore) {
   var p, printWall;
+  printWall = elements.printWall;
+  printWall.scrollTop(printWall[0].scrollHeight);
   if (data) {
     msg = msg + '<span class="strong">' + encodeHTML(JSON.stringify(data)) + '</span>';
   }
-  printWall = $("#print_wall")[0];
   p = document.createElement('p');
   p.innerHTML = msg;
   if (isBefore) {
-    return printWall.insertBefore(p, printWall.childNodes[0]);
+    return $(p).insertBefore(printWall.children()[0]);
   } else {
-    return printWall.appendChild(p);
+    return printWall.append(p);
   }
 };
 
 pressEnter = function(e, room) {
   if (e.keyCode === 13) {
-    return sendMsg(room);
+    return sendMsg();
   }
-};
-
-authFun = function(options, callback) {
-  return AV.realtime._tool.ajax({
-    url: 'https://gaogao.avosapps.com/sign2',
-    data: {
-      client_id: options.clientId,
-      conv_id: options.convId,
-      members: options.members,
-      action: options.action
-    },
-    method: 'post'
-  }, callback);
 };
 
 encodeHTML = function(source) {
   return String(source).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
-sendMsg = function(room) {
+sendMsg = function() {
   var inputSend, msg, printWall;
-  elements = elements;
   inputSend = elements.inputSend;
-  printWall = elements.printWall[0];
+  printWall = elements.printWall;
   msg = inputSend.val();
   if (!String(msg).replace(/^\s+/, '').replace(/\s+$/, '')) {
     alert('请输入点文字！');
     return;
+  } else if (client_id === "游客") {
+    alert("你当前的身份是游客不能发言");
+    return;
   }
-  return room.send({
+  return newRoom.send({
     text: msg
   }, {
     type: 'text'
   }, function(data) {
     inputSend.val('');
-    showLog('（' + formatTime(data.t) + '）  自己： ', msg);
-    return printWall.scrollTop = printWall.scrollHeight;
+    showLog(formatTime(data.t) + ' 我：', msg);
+    return printWall.scrollTop(printWall[0].scrollHeight);
   });
 };
 
@@ -278,52 +200,51 @@ getLog = function(room) {
   return promise;
 };
 
-showMsg = function(data, isBefore, client_id) {
-  var from, from_name, ref, text;
+showMsg = function(data, isBefore) {
+  var from, from_name, text;
   text = '';
   from = data.fromPeerId;
-  from_name = (ref = clientIdToMember(originClientId(from))) != null ? ref.name : void 0;
+  from_name = data.fromPeerId.split(":")[1];
   if (data.msg.type) {
     text = data.msg.text;
   } else {
     text = data.msg;
   }
-  if (data.fromPeerId === client_id) {
-    from_name = '自己';
-  }
-  if (String(text).replace(/^\s+/, '').replace(/\s+$/, '')) {
-    return showLog('（' + formatTime(data.timestamp) + '）  ' + encodeHTML(from_name) + '： ', text, isBefore);
+  if (String(text).replace(/^\s+/, '').replace(/\s+$/, '') && from_name !== client_id) {
+    return showLog(formatTime(data.timestamp) + ' ' + encodeHTML(from_name) + '： ', text, isBefore);
   }
 };
 
 formatTime = function(time) {
   var date;
   date = new Date(time);
-  return $.format.date(date, "yyyy-MM-dd hh:mm:ss");
+  return $.format.date(date, "hh:mm:ss");
 };
 
 main = function(roomname, conv_id, client_id) {
   var printWall;
   printWall = elements.printWall;
-  showLog("正在加入轻飘飘的下午茶时间，请等待。。。");
+  showLog("正在连接有渔直播聊天系统，请等待。。。");
   return connect(roomname, conv_id, client_id).then(function(rt, room) {
     bindEvent(rt, room);
-    showLog('欢迎来到轻飘飘的下午茶时间');
+    showLog('欢迎来到有渔直播间');
     room.join(function() {
       return getLog(room).then(function() {
-        printWall[0].scrollTop = printWall[0].scrollHeight;
-        return showLog('已经加入，可以开始聊天。');
+        printWall.scrollTop(printWall[0].scrollHeight);
+        if (client_id !== "游客") {
+          return showLog('已经加入，可以开始聊天。');
+        }
       });
     });
     room.receive(function(data) {
-      printWall[0].scrollTop = printWall[0].scrollHeight;
+      printWall.scrollTop(printWall[0].scrollHeight);
       if (!msgTime) {
         msgTime = data.timestamp;
       }
       return showMsg(data);
     });
     rt.on('reuse', function() {
-      return showLog("正在重新加入轻飘漂的下午茶时间");
+      return showLog("正在重新连接有渔直播聊天系统");
     });
     rt.on('error', function() {
       showLog('好像有什么不对劲 请打开console 查看相关日志 ');
@@ -331,13 +252,10 @@ main = function(roomname, conv_id, client_id) {
     });
     rt.on('join', function(res) {
       return _.each(res.m, function(m) {
-        var member;
-        if (m !== client_id) {
-          member = clientIdToMember(originClientId(m));
-          showLog(member.name + '加入下午茶');
-          return room.list(function(data) {
-            return rerender_members_list(rt, client_id, data);
-          });
+        var name;
+        name = m.split(":")[1];
+        if (name !== client_id) {
+          return showLog(name + '加入有渔直播间');
         }
       });
     });
@@ -347,7 +265,7 @@ main = function(roomname, conv_id, client_id) {
   });
 };
 
-cleart_members = function() {
+clear_members = function() {
   return room.list(function(data) {
     return room.remove(data, function() {
       return console.log("clear_members");
@@ -383,24 +301,11 @@ get_online_members = function(rt, room, opt) {
   return timeoutPromise(promise, 10000);
 };
 
-originClientId = function(client_id) {
-  if (client_id !== void 0 && client_id.match(roomname) !== null) {
-    return client_id.slice(roomname.length + 1);
-  }
-};
-
-clientIdToMember = function(c_id) {
-  var member;
-  return member = _.findWhere(members, {
-    clientId: c_id
-  });
-};
-
 get_member = function(rt, room) {
   var promise;
   promise = new AV.Promise;
   get_online_members(rt, room).then(function(online_members) {
-    var c_members, client_id, online_list, ref;
+    var c_members, online_list, ref;
     online_list = online_members.map(function(d) {
       return originClientId(d);
     });
@@ -431,7 +336,7 @@ timeoutPromise = function(promise, ms) {
 
 this.chat_demo.get_member = function() {
   return get_conversation().then(function(conv_id) {
-    return connect("teaParty-demo", conv_id, "leancloud").then(function(rt, conv) {
+    return connect(roomname, conv_id, "leanCloud").then(function(rt, conv) {
       return get_member(rt, conv).then(function(client_id) {
         console.log(client_id);
         return close_connect(rt);
@@ -442,7 +347,7 @@ this.chat_demo.get_member = function() {
 
 this.chat_demo.get_online_members = function() {
   return get_conversation().then(function(conv_id) {
-    return connect("teaParty-demo", conv_id, "leancloud").then(function(rt, conv) {
+    return connect(roomname, conv_id, "leanCloud").then(function(rt, conv) {
       return get_online_members(rt, conv).then(function(list) {
         console.log(list);
         return close_connect(rt);
@@ -455,4 +360,6 @@ this.chat_demo.get_conversation = get_conversation;
 
 this.chat_demo.start = start;
 
-this.chat_demo.clear_members = cleart_members;
+this.chat_demo.clear_members = clear_members;
+
+this.chat_demo.connect = connect;

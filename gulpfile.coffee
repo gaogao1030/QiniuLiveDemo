@@ -93,6 +93,11 @@ gulp.task 'watch',->
       .pipe(browserSync.reload({stream:true}))
       console.log path + ' was changed'
 
+gulp.task 'refresh', ->
+  browserSync.reload()
+
+gulp.watch(['*.html'],['refresh'])
+
 gulp.task 'dev',['browser-sync','watch']
 
 gulp.task 'default', ['compressed']

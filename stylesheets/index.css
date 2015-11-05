@@ -20,3 +20,8 @@
   width: 30%;
   display: inline-block;
 }
+
+#really-cool-video {
+  display: inline-block;
+  width: 60%;
+}
