@@ -8,7 +8,6 @@ $(function() {
     this.play();
     tmp_width = this.width();
     return this.on('loadeddata', function() {
-      console.log("aa");
       setTimeout((function(_this) {
         return function() {
           return _this.width(tmp_width - 1);

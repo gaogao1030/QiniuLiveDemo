@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Language" content="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qiniuLive</title>
+<!-- Bootstrap -->
+<link href="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="/bower_components/video.js/dist/video-js.min.css" rel="stylesheet">
+<link href="/stylesheets/index.css" rel="stylesheet">
+<!--<link href="http://vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">-->
+<script src="http://cdn.staticfile.org/underscore.js/1.7.0/underscore-min.js"></script>
+<script src="https://cdn1.lncld.net/static/js/av-mini-0.5.5.js"></script>
+<script src="/bower_components/leancloud-realtime/dist/AV.realtime.min.js"></script>
+<script src="/bower_components/video.js/dist/video.min.js"></script>
+<script src="http://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/jquery-dateFormat/1.0/jquery.dateFormat.min.js"></script>
+<script src="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<!-- script src="http://vjs.zencdn.net/4.10/video.js"></script>-->
+<script src="/javascript/videojs-media-sources.js"></script>
+<script src="/javascript/videojs.hls.min.js"></script>
+<script src="/javascript/YouYuChat.js"></script>
+<script src="/javascript/initPlayer.js"></script>
+
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+-->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/
+html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<div class="live-area">
+  <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
+    <source src="http://foodsound.qiniudn.com/video/introducing_thinglist.mp4" type='video/mp4'>
+  </video>
+  <div class="chat-area">
+    <div id="printWall"></div>
+    <div class="input-group">
+      <input id="chatInput" class="form-control" type="text">
+      <span class="input-group-addon btn" id="btnSend">发送</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="changeName" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">为了验证你的真实信息请输入真实姓名</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="nickName" class="control-label">真实姓名:</label>
+          <input type="text" class="form-control" id="inputNickName">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" id="confirmName" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(document).trigger("started")
+  })
+</script>
