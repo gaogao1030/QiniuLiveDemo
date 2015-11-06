@@ -21,6 +21,9 @@ userAccess = function() {
     realtime.on('error', function() {
       return util.showLog('好像有什么不对劲 请打开console 查看相关日志 ');
     });
+    realtime.on('kicked', function(res) {
+      return console.log(res);
+    });
     return realtime.on('join', function(res) {
       return _.each(res.m, function(m) {
         var name;

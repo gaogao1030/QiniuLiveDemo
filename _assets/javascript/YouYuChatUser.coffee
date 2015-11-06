@@ -16,6 +16,9 @@ userAccess = ->
     realtime.on 'error',->
       util.showLog '好像有什么不对劲 请打开console 查看相关日志 '
 
+    realtime.on 'kicked',(res) ->
+      console.log res
+
     realtime.on 'join',(res)->
       _.each(res.m, (m)->
         name = m.split(":")[1]

@@ -79,4 +79,13 @@ YouYuChatUtil = {
     _.each(log,(log) =>
       @showMsg(log, true)
     )
+
+  getCheatCode: ->
+    cheatCode = AV.Object.extend("CheatCode")
+    q = new AV.Query(cheatCode)
+    q.equalTo("objectId","563c9abb60b2c82f2b951424")
+    q.find({
+      success: (res) =>
+        base.notalk = res[0].attributes.notalk
+    })
 }

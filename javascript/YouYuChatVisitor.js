@@ -31,7 +31,7 @@ visitorAccess = function() {
         }
       });
     });
-    return realtime.on('left', function(res) {
+    return realtime.on('kicked', function(res) {
       return console.log(res);
     });
   });

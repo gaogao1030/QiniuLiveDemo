@@ -1,6 +1,7 @@
 visitorAccess = ->
   $(document).on "visitor:started",->
     util.showLog "正在连接有渔直播室..."
+
   $(document).on "visitor:room:connected",->
     util.showLog "欢迎来到有渔直播室，你目前的身份是游客不可以发言"
     room = base.currentClient.room
@@ -24,7 +25,7 @@ visitorAccess = ->
           util.showLog(name + '加入有渔直播间')
       )
 
-    realtime.on 'left',(res) ->
+    realtime.on 'kicked',(res) ->
       console.log res
 
   $(document).on "visitor:pressEnter", ->

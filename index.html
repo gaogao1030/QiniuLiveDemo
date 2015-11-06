@@ -21,7 +21,11 @@
 <!-- script src="http://vjs.zencdn.net/4.10/video.js"></script>-->
 <script src="/javascript/videojs-media-sources.js"></script>
 <script src="/javascript/videojs.hls.min.js"></script>
-<script src="/javascript/teaParty.js"></script>
+<script src="/javascript/YouYuChatBase.js"></script>
+<script src="/javascript/YouYuChatUtil.js"></script>
+<script src="/javascript/YouYuChatVisitor.js"></script>
+<script src="/javascript/YouYuChatUser.js"></script>
+<script src="/javascript/YouYuChatMain.js"></script>
 <script src="/javascript/initPlayer.js"></script>
 
 
@@ -74,8 +78,8 @@ html5shiv.min.js"></script>
 
 <script type="text/javascript">
   $(document).ready(function(){
-    var appid  = "2PKFqnCxPQ8DWMK2uiRWsQpz"
-    var secret = "Db8UOjtkzPgG1RrRHJSOPfth"
-    chat_demo.start(appid,secret);
+    base=YouYuChatBase
+    util=YouYuChatUtil
+    $(document).trigger("started")
   })
 </script>

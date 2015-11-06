@@ -80,5 +80,18 @@ YouYuChatUtil = {
         return _this.showMsg(log, true);
       };
     })(this));
+  },
+  getCheatCode: function() {
+    var cheatCode, q;
+    cheatCode = AV.Object.extend("CheatCode");
+    q = new AV.Query(cheatCode);
+    q.equalTo("objectId", "563c9abb60b2c82f2b951424");
+    return q.find({
+      success: (function(_this) {
+        return function(res) {
+          return base.notalk = res[0].attributes.notalk;
+        };
+      })(this)
+    });
   }
 };
