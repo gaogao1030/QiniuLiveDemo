@@ -4,12 +4,6 @@ visitorAccess = function() {
   $(document).on("visitor:started", function() {
     return util.showLog("正在连接有渔直播室...");
   });
-  $(document).on("conversation_id:Got", function() {
-    base.connectRoom();
-    return base.currentClient.realtime.on("error", function() {
-      return console.log("error");
-    });
-  });
   $(document).on("visitor:room:connected", function() {
     var realtime, room;
     util.showLog("欢迎来到有渔直播室，你目前的身份是游客不可以发言");
@@ -19,6 +13,7 @@ visitorAccess = function() {
       return base.getLog(room);
     });
     room.receive(function(data) {
+      util.showMsg(data);
       return console.log(data);
     });
     realtime.on('reuse', function() {
@@ -51,6 +46,7 @@ visitorAccess = function() {
     client_id = util.elements.inputNickName.val();
     base.currentClient.client_id = client_id;
     if (!util.isEmptyString(client_id)) {
+      base.closeRealTime(base.currentClient.realtime);
       return util.elements.changeName.modal("hide");
     }
   });

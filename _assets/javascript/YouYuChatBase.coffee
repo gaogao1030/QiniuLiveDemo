@@ -9,6 +9,7 @@ YouYuChatBase = {
     room_name:"qiniuLive"
     #room
     client_id:"游客"
+    #client_id:"gaogao"
     #realtime
     #conv_id
   }

@@ -1,10 +1,6 @@
 visitorAccess = ->
   $(document).on "visitor:started",->
     util.showLog "正在连接有渔直播室..."
-  $(document).on "conversation_id:Got",->
-    base.connectRoom()
-    base.currentClient.realtime.on "error",->
-      console.log "error"
   $(document).on "visitor:room:connected",->
     util.showLog "欢迎来到有渔直播室，你目前的身份是游客不可以发言"
     room = base.currentClient.room
@@ -13,6 +9,7 @@ visitorAccess = ->
       base.getLog(room)
     )
     room.receive (data)->
+      util.showMsg(data)
       console.log data
     realtime.on 'reuse',->
       util.showLog "正在重新连接有渔直播聊天系统"
@@ -40,4 +37,5 @@ visitorAccess = ->
     client_id = util.elements.inputNickName.val()
     base.currentClient.client_id = client_id
     unless util.isEmptyString(client_id)
+      base.closeRealTime base.currentClient.realtime
       util.elements.changeName.modal("hide")

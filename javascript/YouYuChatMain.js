@@ -11,21 +11,29 @@ $(document).on("started", function() {
     changeName: $("#changeName")
   };
   base.getConversation();
-  registerEvent();
   console.log("started");
   if (util.isVisitor()) {
+    registerEvent();
     return $(document).trigger("visitor:started");
+  } else {
+    return $(document).trigger("user:started");
   }
 });
 
 $(document).on("conversation_id:Got", function() {
-  return console.log("conversation_id got");
+  console.log("conversation_id got");
+  base.connectRoom();
+  return base.currentClient.realtime.on("error", function() {
+    return console.log("error");
+  });
 });
 
 $(document).on("room:connected", function() {
   console.log("room connected");
   if (util.isVisitor()) {
     return $(document).trigger("visitor:room:connected");
+  } else {
+    return $(document).trigger("user:room:connected");
   }
 });
 
@@ -34,10 +42,16 @@ $(document).on("room:created", function() {
 });
 
 $(document).on("realtime:closed", function() {
-  return console.log("realtime closed");
+  console.log("realtime closed");
+  if (!util.isVisitor()) {
+    return $(document).trigger("visitor:realtime:closed");
+  } else {
+    return $(document).trigger("user:realtime:closed");
+  }
 });
 
 $(document).on("log:got", function() {
+  util.showChatLog();
   return console.log("log got");
 });
 
@@ -45,6 +59,8 @@ $(document).on("pressEnter", function() {
   console.log("press enter");
   if (util.isVisitor()) {
     return $(document).trigger("visitor:pressEnter");
+  } else {
+    return $(document).trigger("user:pressEnter");
   }
 });
 
@@ -68,6 +84,8 @@ $(document).on("confirmName:click", function() {
 });
 
 visitorAccess();
+
+userAccess();
 
 registerEvent = function() {
   util.elements.body.on('keydown', function(e) {

@@ -29,15 +29,16 @@ YouYuChatUtil = {
     printWall = this.elements.printWall;
     printWall.scrollTop(printWall[0].scrollHeight);
     if (data) {
-      msg = msg + '<span class="strong">' + encodeHTML(JSON.stringify(data)) + '</span>';
+      msg = msg + '<span class="strong">' + this.encodeHTML(JSON.stringify(data)) + '</span>';
     }
     p = document.createElement('p');
     p.innerHTML = msg;
     if (isBefore) {
-      return $(p).insertBefore(printWall.children()[0]);
+      $(p).insertBefore(printWall.children()[0]);
     } else {
-      return printWall.append(p);
+      printWall.append(p);
     }
+    return this.scrollToBottomPrintWall();
   },
   encodeHTML: function(source) {
     return String(source).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -47,5 +48,37 @@ YouYuChatUtil = {
       return false;
     }
     return true;
+  },
+  clearInput: function() {
+    return this.elements.inputSend.val('');
+  },
+  scrollToBottomPrintWall: function() {
+    var printWall;
+    printWall = this.elements.printWall;
+    return printWall.scrollTop(printWall[0].scrollHeight);
+  },
+  showMsg: function(data, isBefore) {
+    var from, from_name, text;
+    text = '';
+    from = data.fromPeerId;
+    from_name = data.fromPeerId.split(":")[1];
+    if (data.msg.type) {
+      text = data.msg.text;
+    } else {
+      text = data.msg;
+    }
+    if (!this.isEmptyString(text)) {
+      return this.showLog(this.formatTime(data.timestamp) + ' ' + this.encodeHTML(from_name) + '： ', text, isBefore);
+    }
+  },
+  showChatLog: function() {
+    var log, printWall;
+    log = base.log;
+    printWall = this.elements.printWall;
+    return _.each(log, (function(_this) {
+      return function(log) {
+        return _this.showMsg(log, true);
+      };
+    })(this));
   }
 };

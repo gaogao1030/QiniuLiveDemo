@@ -9,30 +9,47 @@ $(document).on "started",->
     changeName: $("#changeName")
   }
   base.getConversation()
-  registerEvent()
   console.log "started"
-  $(document).trigger("visitor:started") if util.isVisitor()
+  if util.isVisitor()
+    registerEvent()
+    $(document).trigger("visitor:started")
+  else
+    $(document).trigger("user:started")
 
 $(document).on "conversation_id:Got",->
   console.log "conversation_id got"
+  base.connectRoom()
+  base.currentClient.realtime.on "error",->
+    console.log "error"
 
 $(document).on "room:connected",->
   #base.closeRealTime(base.currentClient.realtime)
   console.log "room connected"
-  $(document).trigger("visitor:room:connected") if util.isVisitor()
+  if util.isVisitor()
+    $(document).trigger("visitor:room:connected")
+  else
+    $(document).trigger("user:room:connected")
 
 $(document).on "room:created",->
   console.log "room created"
 
 $(document).on "realtime:closed",->
   console.log "realtime closed"
+  unless util.isVisitor()
+    $(document).trigger("visitor:realtime:closed")
+  else
+    $(document).trigger("user:realtime:closed")
 
 $(document).on "log:got",->
+  util.showChatLog()
   console.log "log got"
 
 $(document).on "pressEnter", ->
   console.log "press enter"
-  $(document).trigger("visitor:pressEnter") if util.isVisitor()
+  if util.isVisitor()
+    $(document).trigger("visitor:pressEnter")
+  else
+    $(document).trigger("user:pressEnter")
 
 $(document).on "sendMsgBtn:click", ->
   console.log "click sendMsgBtn"
@@ -47,6 +64,8 @@ $(document).on "confirmName:click", ->
   $(document).trigger("visitor:confirmName:click") if util.isVisitor()
 
 visitorAccess()
+userAccess()
+
 
 registerEvent = ->
   util.elements.body.on 'keydown', (e)->
