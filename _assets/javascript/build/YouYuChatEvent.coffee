@@ -1,1 +1,0 @@
-/home/gaogao/github/QiniuLiveDemo/_assets/javascript/YouYuChatEvent.coffee

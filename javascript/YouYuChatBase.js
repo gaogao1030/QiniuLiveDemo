@@ -3,15 +3,21 @@ var YouYuChatBase;
 YouYuChatBase = {
   appid: "2PKFqnCxPQ8DWMK2uiRWsQpz",
   secret: "Db8UOjtkzPgG1RrRHJSOPfth",
+  msgTime: void 0,
+  logFlag: false,
+  log: [],
   currentClient: {
-    room_name: "qiniuLiveDemo",
+    room_name: "qiniuLive",
     client_id: "游客"
   },
-  createRealtime: function() {
+  createRealtime: function(client_id) {
     var result;
+    if (!_.isUndefined(client_id)) {
+      this.currentClient.client_id = client_id;
+    }
     result = AV.realtime({
       appId: this.appid,
-      clientId: this.currentClient.roomname + this.currentClient.client_id,
+      clientId: this.currentClient.room_name + ':' + this.currentClient.client_id,
       secure: false
     });
     this.currentClient.realtime = result;
@@ -50,8 +56,8 @@ YouYuChatBase = {
     return realtime.on('open', (function(_this) {
       return function() {
         return realtime.room(_this.currentClient.conv_id, function(room) {
-          $(document).trigger("room:connected");
           _this.currentClient.room = room;
+          $(document).trigger("room:connected");
           return promise.resolve(room);
         });
       };
@@ -60,23 +66,25 @@ YouYuChatBase = {
   createRoom: function(room_name, client_id) {
     var promise, realtime;
     promise = new AV.Promise;
-    this.createRealtime();
+    this.createRealtime(client_id);
     realtime = this.currentClient.realtime;
     this.currentClient.room_name = room_name;
     this.currentClient.client_id = client_id;
-    return realtime.on('open', function() {
-      return realtime.room({
-        name: this.currentClient.room_name,
-        attr: {
-          room_id: this.currentClient.room_name
-        },
-        members: [this.currentClient.room_name + ":" + this.currentClient.member_name]
-      }, function(room) {
-        this.currentClient.room = room;
-        $(document).trigger("room:created");
-        return promise.resolve(room);
-      });
-    });
+    return realtime.on('open', (function(_this) {
+      return function() {
+        return realtime.room({
+          name: _this.currentClient.room_name,
+          attr: {
+            room_id: _this.currentClient.room_name
+          },
+          members: [_this.currentClient.room_name + ":" + _this.currentClient.client_id]
+        }, function(room) {
+          _this.currentClient.room = room;
+          $(document).trigger("room:created");
+          return promise.resolve(room);
+        });
+      };
+    })(this));
   },
   closeRealTime: function(realtime) {
     var promise;
@@ -87,5 +95,39 @@ YouYuChatBase = {
       return $(document).trigger("realtime:closed");
     });
     return promise;
+  },
+  getLog: function(room) {
+    var promise;
+    promise = new AV.Promise;
+    this.room = room;
+    if (this.logFlag) {
+      return;
+    } else {
+      this.logFlag = true;
+    }
+    room.log({
+      t: this.msgTime
+    }, (function(_this) {
+      return function(data) {
+        var l;
+        _this.logFlag = false;
+        l = data.length;
+        if (l) {
+          _this.msgTime = data[0].timestamp;
+          data.reverse();
+        }
+        _this.log = data;
+        $(document).trigger("log:got");
+        return promise.resolve(data);
+      };
+    })(this));
+    return promise;
+  },
+  clearRoomMembers: function(room) {
+    return room.list(function(data) {
+      return room.remove(data, function() {
+        return console.log("clearn room members");
+      });
+    });
   }
 };
