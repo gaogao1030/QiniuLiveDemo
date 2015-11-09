@@ -1,1 +1,15 @@
-$(function(){var i;return i=jwplayer("jwVideo"),i.setup({file:"http://foodsound.qiniudn.com/video/introducing_thinglist.mp4",id:"jwVideo",width:"60%",aspectratio:"10:6",autostart:!1})});
+$(function() {
+  var j;
+  j = jwplayer("jwVideo");
+  return j.setup({
+    file: "test.flv",
+    streamer: 'rtmp://pili-live-rtmp.live.youyu.im/cimu',
+    id: "cimu",
+    type: 'rtmp/mp4',
+    width: '60%',
+    aspectratio: "10:6",
+    provider: 'rtmp',
+    autostart: false,
+    height: 300
+  });
+});

@@ -1,1 +1,31 @@
-#jwVideo,#printWall,#really-cool-video,.chat-area{display:inline-block}.live-area{margin:20px auto;text-align:center}#printWall{overflow:auto;padding:20px;border:1px solid #c2c2c2;border-radius:4px;height:680px;width:100%;text-align:left}.chat-area{max-width:360px;width:30%;position:relative}#really-cool-video{width:60%}span.red{color:red}
+.live-area {
+  margin: 20px auto;
+  text-align: center;
+}
+
+#printWall {
+  display: inline-block;
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid #c2c2c2;
+  border-radius: 4px;
+  height: 680px;
+  width: 100%;
+  text-align: left;
+}
+
+.chat-area {
+  max-width: 360px;
+  width: 30%;
+  display: inline-block;
+  position: relative;
+}
+
+#really-cool-video {
+  display: inline-block;
+  width: 60%;
+}
+
+span.red {
+  color: red;
+}

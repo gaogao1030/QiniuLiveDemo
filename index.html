@@ -22,7 +22,7 @@
 <script src="/javascript/videojs-media-sources.js"></script>
 <script src="/javascript/videojs.hls.min.js"></script>
 <script src="/bower_components/jwplayer/jwplayer.js"></script>
-<script src="/bower_components/jwplayer/jwplayer.html5.js"></script>
+<script src="/bower_components/js-md5/src/md5.js"></script>
 <script src="/javascript/YouYuChatBase.js"></script>
 <script src="/javascript/YouYuChatUtil.js"></script>
 <script src="/javascript/YouYuChatVisitor.js"></script>
@@ -41,11 +41,12 @@ html5shiv.min.js"></script>
 <![endif]-->
 </head>
 <body>
+<div id="jwVideo"></div>
 <div class="live-area">
-  <!--<video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
-    <source src="http://foodsound.qiniudn.com/video/introducing_thinglist.mp4" type='video/mp4'>
-  </video>-->
-  <div id="jwVideo"></div>
+  <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
+    <source src="rtmp://pili-live-rtmp.live.youyu.im/cimu/test" type='rtmp/mp4'/>
+
+  </video>
   <div class="chat-area">
     <div id="printWall"></div>
     <div class="input-group">

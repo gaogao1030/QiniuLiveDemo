@@ -11,13 +11,17 @@ $ ->
   #      @width(tmp_width)
   #    , 1000
   #)
-  #
+
   j = jwplayer "jwVideo"
   j.setup({
-    file: 'http://foodsound.qiniudn.com/video/introducing_thinglist.mp4'
-    #file: 'rtmp://pili-live-rtmp.live.youyu.im/cimu/test'
-    id: 'jwVideo'
+    #file: 'http://foodsound.qiniudn.com/video/introducing_thinglist.mp4'
+    file: "test.flv"
+    streamer: 'rtmp://pili-live-rtmp.live.youyu.im/cimu'
+    id: "cimu"
+    type: 'rtmp/mp4'
     width: '60%'
     aspectratio: "10:6"
+    provider: 'rtmp'
     autostart: false
+    height: 300
   })
