@@ -1,27 +1,38 @@
 $ ->
-  #videojs("really-cool-video",{width:1280,height:720},->
-  #  window.a = this
-  #  do @play
-  #  tmp_width  = do @width
-  #  @on 'loadeddata', ->
-  #    setTimeout =>
-  #      @width(tmp_width - 1)
-  #    , 500
-  #    setTimeout =>
-  #      @width(tmp_width)
-  #    , 1000
-  #)
+  playerContainer = $("<video />", {
+      "class": "video-js vjs-default-skin"
+    })
+    .attr {
+      controls: true
+      }
+    .css {
+      width: "100%"
+      height: "100%"
+      }
 
-  j = jwplayer "jwVideo"
-  j.setup({
-    #file: 'http://foodsound.qiniudn.com/video/introducing_thinglist.mp4'
-    file: "test.flv"
-    streamer: 'rtmp://pili-live-rtmp.live.youyu.im/cimu'
-    id: "cimu"
-    type: 'rtmp/mp4'
-    width: '60%'
-    aspectratio: "10:6"
-    provider: 'rtmp'
-    autostart: false
-    height: 300
-  })
+  playerContainer.append $("<source />", {
+      src: "rtmp://pili-live-rtmp.live.youyu.im/cimu/test"
+      type: "rtmp/mp4"
+    })
+
+
+  container = $("#player")
+
+  container.append playerContainer
+  player = videojs playerContainer.get(0)
+
+  return player
+
+#videojs("really-cool-video",{width:1280,height:720},->
+#    window.a = this
+#    do @play
+#    tmp_width  = do @width
+#    @on 'loadeddata', ->
+#      setTimeout =>
+#        @width(tmp_width - 1)
+#      , 500
+#      setTimeout =>
+#        @width(tmp_width)
+#      , 1000
+#  )
+

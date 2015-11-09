@@ -42,19 +42,21 @@ html5shiv.min.js"></script>
 </head>
 <body>
 <div id="jwVideo"></div>
-<div class="live-area">
-  <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
-    <source src="rtmp://pili-live-rtmp.live.youyu.im/cimu/test" type='rtmp/mp4'/>
-
-  </video>
+<div class="youyu-container">
+  <div class="live-area">
+    <div id="player" style="width:100%;height:100%">
+    <!--<video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
+      <source src="rtmp://pili-live-rtmp.live.youyu.im/cimu/test" type='rtmp/mp4'/>
+    </video>-->
+    </div>
+  </div>
   <div class="chat-area">
     <div id="printWall"></div>
     <div class="input-group">
-      <input id="chatInput" class="form-control" type="text">
+      <textarea id="chatInput" rows="5" cols="20"  class="form-control" type="text" placeholder="请在这输入你想发送的消息"></textarea>
       <span class="input-group-addon btn" id="btnSend">发送</span>
     </div>
   </div>
-
 </div>
 
 <div class="modal fade" id="changeName" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
