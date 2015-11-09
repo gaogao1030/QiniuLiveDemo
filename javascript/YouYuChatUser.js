@@ -9,11 +9,16 @@ userAccess = function() {
     room = base.currentClient.room;
     realtime = base.currentClient.realtime;
     room.join(function() {
-      util.showLog("你的昵称为" + base.currentClient.client_id + ",已经可以发言了");
-      return base.getLog(room);
+      return util.showLog("你的昵称为" + base.currentClient.client_id + ",已经可以发言了");
     });
     room.receive(function(data) {
-      return util.showMsg(data);
+      if (util.parseMsgLevel(data) === "member") {
+        return util.showMsg(data);
+      } else {
+        return util.getCheatCode().then(function() {
+          return util.showSystemMsg(data);
+        });
+      }
     });
     realtime.on('reuse', function() {
       return util.showLog("正在重新连接有渔直播聊天系统");
@@ -38,17 +43,24 @@ userAccess = function() {
     var msg, room;
     msg = util.elements.inputSend.val();
     room = base.currentClient.room;
-    if (!util.isEmptyString(msg)) {
-      return room.send({
-        text: msg
-      }, {
-        type: 'text'
-      }, function(data) {
-        util.clearInput();
-        return util.showLog((util.formatTime(data.t)) + " 我：", msg);
-      });
+    if (base.notalk) {
+      alert("目前是禁止发言状态");
     } else {
-      alert("请输入点文字");
+      if (!util.isEmptyString(msg)) {
+        return room.send({
+          text: msg,
+          attr: {
+            msgLevel: "member"
+          }
+        }, {
+          type: 'text'
+        }, function(data) {
+          util.clearInput();
+          return util.showLog((util.formatTime(data.t)) + " 我：", msg);
+        });
+      } else {
+        alert("请输入点文字");
+      }
     }
   });
   $(document).on("user:inputSend:click", function() {});

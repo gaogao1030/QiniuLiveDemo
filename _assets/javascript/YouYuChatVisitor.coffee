@@ -10,8 +10,10 @@ visitorAccess = ->
       base.getLog(room)
     )
     room.receive (data)->
-      util.showMsg(data)
-      console.log data
+      if  util.parseMsgLevel(data) == "member"
+        util.showMsg(data)
+      else
+        util.showSystemMsg(data)
     realtime.on 'reuse',->
       util.showLog "正在重新连接有渔直播聊天系统"
 

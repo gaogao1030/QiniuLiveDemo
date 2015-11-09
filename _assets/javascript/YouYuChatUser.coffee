@@ -6,10 +6,15 @@ userAccess = ->
     realtime = base.currentClient.realtime
     room.join(->
       util.showLog "你的昵称为#{base.currentClient.client_id},已经可以发言了"
-      base.getLog(room)
     )
     room.receive (data)->
-      util.showMsg(data)
+      if  util.parseMsgLevel(data) == "member"
+        util.showMsg(data)
+      else
+        util.getCheatCode().then(
+          ->
+            util.showSystemMsg(data)
+        )
     realtime.on 'reuse',->
       util.showLog "正在重新连接有渔直播聊天系统"
 
@@ -29,20 +34,27 @@ userAccess = ->
   $(document).on "user:pressEnter", ->
     msg = util.elements.inputSend.val()
     room = base.currentClient.room
-    unless util.isEmptyString(msg)
-      room.send({
-        text:msg
-      },
-      {
-        type: 'text'
-      },
-      (data) ->
-        util.clearInput()
-        util.showLog("#{util.formatTime(data.t)} 我：",msg)
-      )
-    else
-      alert "请输入点文字"
+    if base.notalk
+      alert "目前是禁止发言状态"
       return
+    else
+      unless util.isEmptyString(msg)
+        room.send({
+          text:msg
+          attr: {
+            msgLevel: "member"
+          }
+        },
+        {
+          type: 'text'
+        },
+        (data) ->
+          util.clearInput()
+          util.showLog("#{util.formatTime(data.t)} 我：",msg)
+        )
+      else
+        alert "请输入点文字"
+        return
 
   $(document).on "user:inputSend:click", ->
 

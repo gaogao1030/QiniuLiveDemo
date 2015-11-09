@@ -73,11 +73,21 @@ YouYuChatUtil = {
     unless @isEmptyString(text)
       @showLog( @formatTime(data.timestamp) + ' ' + @encodeHTML(from_name) + '： ', text, isBefore)
 
+  showSystemMsg: (data,isBefore) ->
+    if(data.msg.type)
+      text = data.msg.text
+    else
+      text = data.msg
+    @showLog("<span class='red'>系统提示:"+text+"</span>","",isBefore)
+
   showChatLog: ->
     log = base.log
     printWall = @elements.printWall
     _.each(log,(log) =>
-      @showMsg(log, true)
+      if @parseMsgLevel(log) == "member"
+        @showMsg(log, true)
+      else
+        @showSystemMsg(log, true)
     )
 
   getCheatCode: ->
@@ -88,4 +98,36 @@ YouYuChatUtil = {
       success: (res) =>
         base.notalk = res[0].attributes.notalk
     })
+
+  parseMsgLevel: (data) ->
+    return data.msg.attr.msgLevel
+
+  setCheatCode: (attr,permit)->
+    if permit == "hentai"
+      base.notalk = false
+      code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
+      code.set('notalk',attr)
+      if attr
+        text = "管理员开启了全员禁言"
+      else
+        text = "管理员关闭了全员禁言"
+      code.save({
+        success: ->
+          base.currentClient.room.send({
+            text: text
+            attr: {
+              msgLevel: "system"
+            }
+          },
+          {
+            type: 'text'
+          },
+          (data) ->
+            util.clearInput()
+            data.msg = text
+            util.showSystemMsg(data)
+          )
+      })
+    else
+      console.log "permit denied"
 }

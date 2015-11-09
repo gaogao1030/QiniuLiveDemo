@@ -15,6 +15,8 @@ $(document).on "started",->
     $(document).trigger("visitor:started")
   else
     $(document).trigger("user:started")
+  util.getCheatCode()
+
 
 $(document).on "conversation_id:Got",->
   console.log "conversation_id got"

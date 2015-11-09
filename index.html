@@ -21,6 +21,8 @@
 <!-- script src="http://vjs.zencdn.net/4.10/video.js"></script>-->
 <script src="/javascript/videojs-media-sources.js"></script>
 <script src="/javascript/videojs.hls.min.js"></script>
+<script src="/bower_components/jwplayer/jwplayer.js"></script>
+<script src="/bower_components/jwplayer/jwplayer.html5.js"></script>
 <script src="/javascript/YouYuChatBase.js"></script>
 <script src="/javascript/YouYuChatUtil.js"></script>
 <script src="/javascript/YouYuChatVisitor.js"></script>
@@ -40,9 +42,10 @@ html5shiv.min.js"></script>
 </head>
 <body>
 <div class="live-area">
-  <video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
+  <!--<video id="really-cool-video" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
     <source src="http://foodsound.qiniudn.com/video/introducing_thinglist.mp4" type='video/mp4'>
-  </video>
+  </video>-->
+  <div id="jwVideo"></div>
   <div class="chat-area">
     <div id="printWall"></div>
     <div class="input-group">

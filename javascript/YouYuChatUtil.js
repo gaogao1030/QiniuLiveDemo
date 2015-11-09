@@ -71,13 +71,26 @@ YouYuChatUtil = {
       return this.showLog(this.formatTime(data.timestamp) + ' ' + this.encodeHTML(from_name) + '： ', text, isBefore);
     }
   },
+  showSystemMsg: function(data, isBefore) {
+    var text;
+    if (data.msg.type) {
+      text = data.msg.text;
+    } else {
+      text = data.msg;
+    }
+    return this.showLog("<span class='red'>系统提示:" + text + "</span>", "", isBefore);
+  },
   showChatLog: function() {
     var log, printWall;
     log = base.log;
     printWall = this.elements.printWall;
     return _.each(log, (function(_this) {
       return function(log) {
-        return _this.showMsg(log, true);
+        if (_this.parseMsgLevel(log) === "member") {
+          return _this.showMsg(log, true);
+        } else {
+          return _this.showSystemMsg(log, true);
+        }
       };
     })(this));
   },
@@ -93,5 +106,39 @@ YouYuChatUtil = {
         };
       })(this)
     });
+  },
+  parseMsgLevel: function(data) {
+    return data.msg.attr.msgLevel;
+  },
+  setCheatCode: function(attr, permit) {
+    var code, text;
+    if (permit === "hentai") {
+      base.notalk = false;
+      code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
+      code.set('notalk', attr);
+      if (attr) {
+        text = "管理员开启了全员禁言";
+      } else {
+        text = "管理员关闭了全员禁言";
+      }
+      return code.save({
+        success: function() {
+          return base.currentClient.room.send({
+            text: text,
+            attr: {
+              msgLevel: "system"
+            }
+          }, {
+            type: 'text'
+          }, function(data) {
+            util.clearInput();
+            data.msg = text;
+            return util.showSystemMsg(data);
+          });
+        }
+      });
+    } else {
+      return console.log("permit denied");
+    }
   }
 };
