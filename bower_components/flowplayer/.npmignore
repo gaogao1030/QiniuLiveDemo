@@ -1,9 +1,0 @@
-deps
-features
-lib
-/skin
-test
-Gemfile*
-Makefile
-Rakefile
-.travis.yml

@@ -112,7 +112,7 @@ YouYuChatUtil = {
   },
   setCheatCode: function(attr, permit) {
     var code, text;
-    if (permit === "hentai") {
+    if (md5(permit) === "c2fc2f64438b1eb36b7e244bdb7bd535") {
       base.notalk = false;
       code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
       code.set('notalk', attr);
