@@ -12,6 +12,7 @@ userAccess = function() {
       return util.showLog("你的昵称为" + (base.baseState.get('client_id')) + ",已经可以发言了");
     });
     room.receive(function(data) {
+      util.refreshPage(data);
       if (util.parseMsgLevel(data) === "member") {
         return util.showMsg(data);
       } else {

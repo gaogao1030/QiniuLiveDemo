@@ -15,8 +15,12 @@ $(document).on "started",->
     $(document).trigger("visitor:started")
   else
     $(document).trigger("user:started")
-  util.getCheatCode()
-
+  util.getCheatCode().then(->
+    auth_code = window.location.hash
+    if md5(auth_code.slice("1")) != base.baseState.get("auth_code")
+      window.location.href="/forbidden"
+      return
+  )
 
 $(document).on "conversation_id:Got",->
   console.log "conversation_id got"

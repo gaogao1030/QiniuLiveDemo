@@ -8,6 +8,7 @@ userAccess = ->
       util.showLog "你的昵称为#{base.baseState.get('client_id')},已经可以发言了"
     )
     room.receive (data)->
+      util.refreshPage(data)
       if  util.parseMsgLevel(data) == "member"
         util.showMsg(data)
       else

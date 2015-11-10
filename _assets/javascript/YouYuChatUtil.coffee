@@ -90,44 +90,75 @@ YouYuChatUtil = {
         @showSystemMsg(log, true)
     )
 
-  getCheatCode: ->
+  getCheatCode: ()->
     cheatCode = AV.Object.extend("CheatCode")
     q = new AV.Query(cheatCode)
     q.equalTo("objectId","563c9abb60b2c82f2b951424")
     q.find({
       success: (res) =>
         base.baseState.set('notalk',res[0].attributes.notalk)
+        base.baseState.set('auth_code',res[0].attributes.auth_code)
     })
+
+  refreshPage: (data) ->
+    if data.msg.attr.reload
+      window.location.reload()
 
   parseMsgLevel: (data) ->
     return data.msg.attr.msgLevel
 
-  setCheatCode: (attr,permit)->
+  setCheatCode: (commnad,attr,permit)->
     if md5(permit) == "c2fc2f64438b1eb36b7e244bdb7bd535"
-      base.baseState.set('notalk',false)
-      code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
-      code.set('notalk',attr)
-      if attr
-        text = "管理员开启了全员禁言"
-      else
-        text = "管理员关闭了全员禁言"
-      code.save({
-        success: ->
-          base.baseState.get('room').send({
-            text: text
-            attr: {
-              msgLevel: "system"
-            }
-          },
-          {
-            type: 'text'
-          },
-          (data) ->
-            util.clearInput()
-            data.msg = text
-            util.showSystemMsg(data)
-          )
-      })
+      switch commnad
+        when "shutup"
+          base.baseState.set('notalk',false)
+          code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
+          code.set('notalk',attr)
+          if attr
+            text = "管理员开启了全员禁言"
+          else
+            text = "管理员关闭了全员禁言"
+          code.save({
+            success: ->
+              base.baseState.get('room').send({
+                text: text
+                attr: {
+                  msgLevel: "system"
+                }
+              },
+              {
+                type: 'text'
+              },
+              (data) ->
+                util.clearInput()
+                data.msg = text
+                util.showSystemMsg(data)
+              )
+          })
+        when "changeAuthCode"
+          code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
+          code.set('auth_code',md5(attr))
+          text = "授权码被改变页面将会被重新载入"
+          code.save({
+            success: ->
+              base.baseState.get('room').send({
+                text: text
+                attr: {
+                  msgLevel: "system"
+                  reload: true
+                }
+              },
+              {
+                type: 'text'
+              },
+              (data) ->
+                util.clearInput()
+                data.msg = text
+                util.showSystemMsg(data)
+              )
+          })
+        else
+          console.log "no command"
     else
       console.log "permit denied"
 }

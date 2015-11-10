@@ -13,6 +13,7 @@ visitorAccess = function() {
       return base.getLog(room);
     });
     room.receive(function(data) {
+      util.refreshPage(data);
       if (util.parseMsgLevel(data) === "member") {
         return util.showMsg(data);
       } else {

@@ -102,41 +102,73 @@ YouYuChatUtil = {
     return q.find({
       success: (function(_this) {
         return function(res) {
-          return base.baseState.set('notalk', res[0].attributes.notalk);
+          base.baseState.set('notalk', res[0].attributes.notalk);
+          return base.baseState.set('auth_code', res[0].attributes.auth_code);
         };
       })(this)
     });
   },
+  refreshPage: function(data) {
+    if (data.msg.attr.reload) {
+      return window.location.reload();
+    }
+  },
   parseMsgLevel: function(data) {
     return data.msg.attr.msgLevel;
   },
-  setCheatCode: function(attr, permit) {
+  setCheatCode: function(commnad, attr, permit) {
     var code, text;
     if (md5(permit) === "c2fc2f64438b1eb36b7e244bdb7bd535") {
-      base.baseState.set('notalk', false);
-      code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
-      code.set('notalk', attr);
-      if (attr) {
-        text = "管理员开启了全员禁言";
-      } else {
-        text = "管理员关闭了全员禁言";
-      }
-      return code.save({
-        success: function() {
-          return base.baseState.get('room').send({
-            text: text,
-            attr: {
-              msgLevel: "system"
+      switch (commnad) {
+        case "shutup":
+          base.baseState.set('notalk', false);
+          code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
+          code.set('notalk', attr);
+          if (attr) {
+            text = "管理员开启了全员禁言";
+          } else {
+            text = "管理员关闭了全员禁言";
+          }
+          return code.save({
+            success: function() {
+              return base.baseState.get('room').send({
+                text: text,
+                attr: {
+                  msgLevel: "system"
+                }
+              }, {
+                type: 'text'
+              }, function(data) {
+                util.clearInput();
+                data.msg = text;
+                return util.showSystemMsg(data);
+              });
             }
-          }, {
-            type: 'text'
-          }, function(data) {
-            util.clearInput();
-            data.msg = text;
-            return util.showSystemMsg(data);
           });
-        }
-      });
+        case "changeAuthCode":
+          code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
+          code.set('auth_code', md5(attr));
+          text = "授权码被改变页面将会被重新载入";
+          return code.save({
+            success: function() {
+              return base.baseState.get('room').send({
+                text: text,
+                attr: {
+                  msgLevel: "system",
+                  reload: true
+                }
+              }, {
+                type: 'text'
+              }, function(data) {
+                util.clearInput();
+                data.msg = text;
+                return util.showSystemMsg(data);
+              });
+            }
+          });
+        default:
+          return console.log("no command");
+      }
     } else {
       return console.log("permit denied");
     }

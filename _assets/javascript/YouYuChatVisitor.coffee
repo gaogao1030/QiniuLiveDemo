@@ -10,6 +10,7 @@ visitorAccess = ->
       base.getLog(room)
     )
     room.receive (data)->
+      util.refreshPage(data)
       if  util.parseMsgLevel(data) == "member"
         util.showMsg(data)
       else

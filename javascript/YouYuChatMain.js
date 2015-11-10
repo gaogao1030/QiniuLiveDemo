@@ -18,7 +18,13 @@ $(document).on("started", function() {
   } else {
     $(document).trigger("user:started");
   }
-  return util.getCheatCode();
+  return util.getCheatCode().then(function() {
+    var auth_code;
+    auth_code = window.location.hash;
+    if (md5(auth_code.slice("1")) !== base.baseState.get("auth_code")) {
+      window.location.href = "/forbidden";
+    }
+  });
 });
 
 $(document).on("conversation_id:Got", function() {
