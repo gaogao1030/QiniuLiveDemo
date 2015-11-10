@@ -98,6 +98,7 @@ YouYuChatUtil = {
       success: (res) =>
         base.baseState.set('notalk',res[0].attributes.notalk)
         base.baseState.set('auth_code',res[0].attributes.auth_code)
+        base.baseState.set('cheat_code_token',res[0].attributes.token)
     })
 
   refreshPage: (data) ->
@@ -108,7 +109,7 @@ YouYuChatUtil = {
     return data.msg.attr.msgLevel
 
   setCheatCode: (commnad,attr,permit)->
-    if md5(permit) == "c2fc2f64438b1eb36b7e244bdb7bd535"
+    if md5(permit) == base.baseState.get("cheat_code_token")
       switch commnad
         when "shutup"
           base.baseState.set('notalk',false)
@@ -152,13 +153,55 @@ YouYuChatUtil = {
                 type: 'text'
               },
               (data) ->
+                util.refreshPage({msg:{attr:{reload:true}}})
                 util.clearInput()
                 data.msg = text
                 util.showSystemMsg(data)
               )
           })
+        when "changeToken"
+          code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
+          code.set('token',md5(attr))
+          text = "Token被改变页面即将重新载入"
+          code.save({
+            success: ->
+              base.baseState.get('room').send({
+                text: text
+                attr: {
+                  msgLevel: "system"
+                  reload: true
+                }
+              },
+              {
+                type: 'text'
+              },
+              (data) ->
+                util.refreshPage({msg:{attr:{reload:true}}})
+                util.clearInput()
+                data.msg = text
+                util.showSystemMsg(data)
+              )
+          })
+        when "changeNoTalk"
+          base.baseState.set("notalk",attr)
         else
           console.log "no command"
     else
       console.log "permit denied"
 }
+
+window.talklocal = (token)->
+  util.setCheatCode("changeNoTalk",false,token)
+
+window.talkon = (token)->
+  util.setCheatCode("shutup",false,token)
+
+window.talkoff = (token)->
+  util.setCheatCode("shutup",true,token)
+
+window.tokenchange = (oldtoken,newtoken)->
+  util.setCheatCode("changeToken",newtoken,oldtoken)
+
+window.authcode = (token,auth_code)->
+  util.setCheatCode("changeAuthCode",auth_code,token)
+

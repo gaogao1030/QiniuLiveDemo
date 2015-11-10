@@ -103,7 +103,8 @@ YouYuChatUtil = {
       success: (function(_this) {
         return function(res) {
           base.baseState.set('notalk', res[0].attributes.notalk);
-          return base.baseState.set('auth_code', res[0].attributes.auth_code);
+          base.baseState.set('auth_code', res[0].attributes.auth_code);
+          return base.baseState.set('cheat_code_token', res[0].attributes.token);
         };
       })(this)
     });
@@ -118,7 +119,7 @@ YouYuChatUtil = {
   },
   setCheatCode: function(commnad, attr, permit) {
     var code, text;
-    if (md5(permit) === "c2fc2f64438b1eb36b7e244bdb7bd535") {
+    if (md5(permit) === base.baseState.get("cheat_code_token")) {
       switch (commnad) {
         case "shutup":
           base.baseState.set('notalk', false);
@@ -160,12 +161,49 @@ YouYuChatUtil = {
               }, {
                 type: 'text'
               }, function(data) {
+                util.refreshPage({
+                  msg: {
+                    attr: {
+                      reload: true
+                    }
+                  }
+                });
                 util.clearInput();
                 data.msg = text;
                 return util.showSystemMsg(data);
               });
             }
           });
+        case "changeToken":
+          code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
+          code.set('token', md5(attr));
+          text = "Token被改变页面即将重新载入";
+          return code.save({
+            success: function() {
+              return base.baseState.get('room').send({
+                text: text,
+                attr: {
+                  msgLevel: "system",
+                  reload: true
+                }
+              }, {
+                type: 'text'
+              }, function(data) {
+                util.refreshPage({
+                  msg: {
+                    attr: {
+                      reload: true
+                    }
+                  }
+                });
+                util.clearInput();
+                data.msg = text;
+                return util.showSystemMsg(data);
+              });
+            }
+          });
+        case "changeNoTalk":
+          return base.baseState.set("notalk", attr);
         default:
           return console.log("no command");
       }
@@ -173,4 +211,24 @@ YouYuChatUtil = {
       return console.log("permit denied");
     }
   }
+};
+
+window.talklocal = function(token) {
+  return util.setCheatCode("changeNoTalk", false, token);
+};
+
+window.talkon = function(token) {
+  return util.setCheatCode("shutup", false, token);
+};
+
+window.talkoff = function(token) {
+  return util.setCheatCode("shutup", true, token);
+};
+
+window.tokenchange = function(oldtoken, newtoken) {
+  return util.setCheatCode("changeToken", newtoken, oldtoken);
+};
+
+window.authcode = function(token, auth_code) {
+  return util.setCheatCode("changeAuthCode", auth_code, token);
 };
