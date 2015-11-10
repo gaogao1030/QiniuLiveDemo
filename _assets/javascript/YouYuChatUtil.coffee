@@ -7,6 +7,7 @@ YouYuChatUtil = {
   #  inputNickName: $("#inputNickName")
   #  confirmName: $("#confirmName")
   #  changeName: $("#changeName")
+  #  chatArea: $(".chat-area")
   #}
   isVisitor: ->
     if base.baseState.get('client_id') == "游客"

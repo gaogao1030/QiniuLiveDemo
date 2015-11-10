@@ -2,6 +2,7 @@ var userAccess;
 
 userAccess = function() {
   $(document).on("user:started", function() {
+    util.elements.sendMsgBtn.attr("disabled", false);
     return console.log("user:started");
   });
   $(document).on("user:room:connected", function() {

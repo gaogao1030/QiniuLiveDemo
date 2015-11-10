@@ -1,5 +1,6 @@
 userAccess = ->
   $(document).on "user:started",->
+    util.elements.sendMsgBtn.attr("disabled",false)
     console.log "user:started"
   $(document).on "user:room:connected",->
     room = base.baseState.get('room')

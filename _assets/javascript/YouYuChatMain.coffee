@@ -7,6 +7,8 @@ $(document).on "started",->
     inputNickName: $("#inputNickName")
     confirmName: $("#confirmName")
     changeName: $("#changeName")
+    chatArea: $(".chat-area")
+    modalDialog: $(".modal-dialog")
   }
   base.getConversation()
   console.log "started"
@@ -74,9 +76,13 @@ userAccess()
 
 
 registerEvent = ->
-  util.elements.body.on 'keydown', (e)->
+  util.elements.chatArea.on 'keydown', (e)->
     if e.keyCode == 13
       $(document).trigger("pressEnter")
+
+  util.elements.modalDialog.on 'keydown', (e)->
+    if e.keyCode == 13
+      $(document).trigger("visitor:confirmName:click")
 
   util.elements.sendMsgBtn.on 'click', (e)->
     $(document).trigger("sendMsgBtn:click")

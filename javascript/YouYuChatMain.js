@@ -8,7 +8,9 @@ $(document).on("started", function() {
     inputSend: $("#chatInput"),
     inputNickName: $("#inputNickName"),
     confirmName: $("#confirmName"),
-    changeName: $("#changeName")
+    changeName: $("#changeName"),
+    chatArea: $(".chat-area"),
+    modalDialog: $(".modal-dialog")
   };
   base.getConversation();
   console.log("started");
@@ -95,9 +97,14 @@ visitorAccess();
 userAccess();
 
 registerEvent = function() {
-  util.elements.body.on('keydown', function(e) {
+  util.elements.chatArea.on('keydown', function(e) {
     if (e.keyCode === 13) {
       return $(document).trigger("pressEnter");
+    }
+  });
+  util.elements.modalDialog.on('keydown', function(e) {
+    if (e.keyCode === 13) {
+      return $(document).trigger("visitor:confirmName:click");
     }
   });
   util.elements.sendMsgBtn.on('click', function(e) {
