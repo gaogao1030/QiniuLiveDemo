@@ -1,12 +1,12 @@
 .live-area {
-  width: 70%;
+  width: 80%;
   left: 0;
   position: absolute;
   height: 100%;
 }
 
 .chat-area {
-  width: 30%;
+  width: 20%;
   position: absolute;
   right: 0;
   height: 100%;
@@ -17,7 +17,7 @@
 }
 
 #printWall {
-  display: inline-block;
+  position: absolute;
   overflow: auto;
   padding: 20px;
   border: 1px solid #c2c2c2;
@@ -25,6 +25,7 @@
   height: 90%;
   width: 100%;
   text-align: left;
+  bottom: 100px;
 }
 
 #really-cool-video {
@@ -84,4 +85,8 @@ span.red {
 }
 .vjs-progress-tooltip span {
   margin-left: 1em;
+}
+
+#chatInput {
+  height: 100px;
 }

@@ -3,7 +3,7 @@ visitorAccess = ->
     util.showLog "正在连接有渔直播室..."
 
   $(document).on "visitor:room:connected",->
-    util.showLog "欢迎来到有渔直播室，你目前的身份是游客不可以发言"
+    util.showLog "欢迎来到有渔直播室，请点击消息框输入您的姓名后再发言"
     room = base.currentClient.room
     realtime = base.currentClient.realtime
     room.join(->
@@ -31,7 +31,7 @@ visitorAccess = ->
       console.log res
 
   $(document).on "visitor:pressEnter", ->
-    alert "你目前的身份是游客不可以发言"
+    alert "你目前还未输入姓名，不可以发言"
 
   $(document).on "visitor:inputSend:click", ->
       util.elements.changeName.modal("show")
