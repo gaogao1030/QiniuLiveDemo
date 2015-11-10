@@ -12,7 +12,21 @@ YouYuChatBase = {
     #client_id:"gaogao"
     #realtime
     #conv_id
+    #members
   }
+
+  optState: ->
+    state = {
+      a:1
+      b:2
+    }
+    return {
+      setState: (key,value)->
+        state[key]=value
+      getState: (key)->
+        state[key]
+    }
+
 
   createRealtime : (client_id)->
     @currentClient.client_id = client_id unless _.isUndefined(client_id)
@@ -32,6 +46,7 @@ YouYuChatBase = {
     q.find({
       success: (response) =>
         conv_id = response[0]?.id||"null"
+        @currentClient.members = response[0].attributes.m
         @currentClient.conv_id = conv_id
         $(document).trigger("conversation_id:Got")
         promise.resolve(conv_id)

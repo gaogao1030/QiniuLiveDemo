@@ -10,6 +10,21 @@ YouYuChatBase = {
     room_name: "qiniuLive",
     client_id: "游客"
   },
+  optState: function() {
+    var state;
+    state = {
+      a: 1,
+      b: 2
+    };
+    return {
+      setState: function(key, value) {
+        return state[key] = value;
+      },
+      getState: function(key) {
+        return state[key];
+      }
+    };
+  },
   createRealtime: function(client_id) {
     var result;
     if (!_.isUndefined(client_id)) {
@@ -35,6 +50,7 @@ YouYuChatBase = {
         return function(response) {
           var conv_id, ref;
           conv_id = ((ref = response[0]) != null ? ref.id : void 0) || "null";
+          _this.currentClient.members = response[0].attributes.m;
           _this.currentClient.conv_id = conv_id;
           $(document).trigger("conversation_id:Got");
           return promise.resolve(conv_id);

@@ -17,14 +17,17 @@ $ ->
 
 
   container = $("#player")
-
   container.append playerContainer
   player = videojs playerContainer.get(0),{width:500,height:500},
     ->
-     do @play
-     tmp_width  = do @width
-     @on 'loadeddata', ->
-       $(".live-area").css(width: "80%")
+      do @play
+      $live_area = $(".live-area")
+      width = $live_area.width()
+      @on 'loadeddata', ->
+        $live_area.css(width: "79%")
+        setTimeout =>
+          $live_area.css(width: "80%")
+        , 100
   return player
 
 #videojs("really-cool-video",{width:1280,height:720},->

@@ -18,13 +18,21 @@ $(function() {
     width: 500,
     height: 500
   }, function() {
-    var tmp_width;
+    var $live_area, width;
     this.play();
-    tmp_width = this.width();
+    $live_area = $(".live-area");
+    width = $live_area.width();
     return this.on('loadeddata', function() {
-      return $(".live-area").css({
-        width: "80%"
+      $live_area.css({
+        width: "79%"
       });
+      return setTimeout((function(_this) {
+        return function() {
+          return $live_area.css({
+            width: "80%"
+          });
+        };
+      })(this), 100);
     });
   });
   return player;

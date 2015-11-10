@@ -1,3 +1,7 @@
+body {
+  background-color:#000;
+}
+
 .live-area {
   width: 80%;
   left: 0;
@@ -10,6 +14,7 @@
   position: absolute;
   right:0;
   height: 100%;
+  background-color:#fff;
 }
 
 .video-container {
@@ -21,7 +26,6 @@
   overflow: auto;
   padding: 20px;
   border: 1px solid #c2c2c2;
-  border-radius: 4px;
   height: 90%;
   width: 100%;
   text-align: left;
