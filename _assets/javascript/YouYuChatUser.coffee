@@ -2,10 +2,10 @@ userAccess = ->
   $(document).on "user:started",->
     console.log "user:started"
   $(document).on "user:room:connected",->
-    room = base.currentClient.room
-    realtime = base.currentClient.realtime
+    room = base.baseState.get('room')
+    realtime = base.baseState.get('realtime')
     room.join(->
-      util.showLog "你的昵称为#{base.currentClient.client_id},已经可以发言了"
+      util.showLog "你的昵称为#{base.baseState.get('client_id')},已经可以发言了"
     )
     room.receive (data)->
       if  util.parseMsgLevel(data) == "member"
@@ -27,14 +27,14 @@ userAccess = ->
     realtime.on 'join',(res)->
       _.each(res.m, (m)->
         name = m.split(":")[1]
-        unless name == base.currentClient.client_id
+        unless name == base.baseState.get('client_id')
           util.showLog(name + '加入有渔直播间')
       )
 
   $(document).on "user:pressEnter", ->
     msg = util.elements.inputSend.val()
-    room = base.currentClient.room
-    if base.notalk
+    room = base.baseState.get('room')
+    if base.baseState.get('notalk')
       alert "目前是禁止发言状态"
       return
     else

@@ -9,7 +9,7 @@ YouYuChatUtil = {
   #  changeName: $("#changeName")
   #}
   isVisitor: ->
-    if base.currentClient.client_id == "游客"
+    if base.baseState.get('client_id') == "游客"
       return true
     return false
 
@@ -81,7 +81,7 @@ YouYuChatUtil = {
     @showLog("<span class='red'>系统提示:"+text+"</span>","",isBefore)
 
   showChatLog: ->
-    log = base.log
+    log = base.baseState.get('log')
     printWall = @elements.printWall
     _.each(log,(log) =>
       if @parseMsgLevel(log) == "member"
@@ -96,7 +96,7 @@ YouYuChatUtil = {
     q.equalTo("objectId","563c9abb60b2c82f2b951424")
     q.find({
       success: (res) =>
-        base.notalk = res[0].attributes.notalk
+        base.baseState.set('notalk',res[0].attributes.notalk)
     })
 
   parseMsgLevel: (data) ->
@@ -104,7 +104,7 @@ YouYuChatUtil = {
 
   setCheatCode: (attr,permit)->
     if md5(permit) == "c2fc2f64438b1eb36b7e244bdb7bd535"
-      base.notalk = false
+      base.baseState.set('notalk',false)
       code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
       code.set('notalk',attr)
       if attr
@@ -113,7 +113,7 @@ YouYuChatUtil = {
         text = "管理员关闭了全员禁言"
       code.save({
         success: ->
-          base.currentClient.room.send({
+          base.baseState.get('room').send({
             text: text
             attr: {
               msgLevel: "system"

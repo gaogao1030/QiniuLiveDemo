@@ -6,10 +6,10 @@ userAccess = function() {
   });
   $(document).on("user:room:connected", function() {
     var realtime, room;
-    room = base.currentClient.room;
-    realtime = base.currentClient.realtime;
+    room = base.baseState.get('room');
+    realtime = base.baseState.get('realtime');
     room.join(function() {
-      return util.showLog("你的昵称为" + base.currentClient.client_id + ",已经可以发言了");
+      return util.showLog("你的昵称为" + (base.baseState.get('client_id')) + ",已经可以发言了");
     });
     room.receive(function(data) {
       if (util.parseMsgLevel(data) === "member") {
@@ -33,7 +33,7 @@ userAccess = function() {
       return _.each(res.m, function(m) {
         var name;
         name = m.split(":")[1];
-        if (name !== base.currentClient.client_id) {
+        if (name !== base.baseState.get('client_id')) {
           return util.showLog(name + '加入有渔直播间');
         }
       });
@@ -42,8 +42,8 @@ userAccess = function() {
   $(document).on("user:pressEnter", function() {
     var msg, room;
     msg = util.elements.inputSend.val();
-    room = base.currentClient.room;
-    if (base.notalk) {
+    room = base.baseState.get('room');
+    if (base.baseState.get('notalk')) {
       alert("目前是禁止发言状态");
     } else {
       if (!util.isEmptyString(msg)) {

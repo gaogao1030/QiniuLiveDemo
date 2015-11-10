@@ -4,8 +4,8 @@ visitorAccess = ->
 
   $(document).on "visitor:room:connected",->
     util.showLog "欢迎来到有渔直播室，请点击消息框输入您的姓名后再发言"
-    room = base.currentClient.room
-    realtime = base.currentClient.realtime
+    room = base.baseState.get('room')
+    realtime = base.baseState.get('realtime')
     room.join(->
       base.getLog(room)
     )
@@ -23,7 +23,7 @@ visitorAccess = ->
     realtime.on 'join',(res)->
       _.each(res.m, (m)->
         name = m.split(":")[1]
-        unless name == base.currentClient.client_id
+        unless name == base.baseState.get('client_id')
           util.showLog(name + '加入有渔直播间')
       )
 
@@ -38,7 +38,7 @@ visitorAccess = ->
 
   $(document).on "visitor:confirmName:click", ->
     client_id = util.elements.inputNickName.val()
-    base.currentClient.client_id = client_id
+    base.baseState.set('client_id',client_id)
     unless util.isEmptyString(client_id)
-      base.closeRealTime base.currentClient.realtime
+      base.closeRealTime base.baseState.get('realtime')
       util.elements.changeName.modal("hide")

@@ -1,53 +1,50 @@
 YouYuChatBase = {
-  appid: "2PKFqnCxPQ8DWMK2uiRWsQpz"
-  secret: "Db8UOjtkzPgG1RrRHJSOPfth"
-  msgTime: undefined
-  logFlag: false
-  log: []
 
-  currentClient : {
-    room_name:"qiniuLive"
-    #room
-    client_id:"游客"
-    #client_id:"gaogao"
-    #realtime
-    #conv_id
-    #members
-  }
-
-  optState: ->
+  baseState: do ->
     state = {
-      a:1
-      b:2
+      appid: "2PKFqnCxPQ8DWMK2uiRWsQpz"
+      secret: "Db8UOjtkzPgG1RrRHJSOPfth"
+      msgTime: undefined
+      logFlag: false
+      log: []
+      room_name:"qiniuLive"
+      #room
+      client_id:"游客"
+      #client_id:"gaogao"
+      #realtime
+      #conv_id
+      #members
+      #notalk
     }
     return {
-      setState: (key,value)->
+      set: (key,value)->
         state[key]=value
-      getState: (key)->
+      get: (key)->
         state[key]
     }
 
 
+
   createRealtime : (client_id)->
-    @currentClient.client_id = client_id unless _.isUndefined(client_id)
+    @baseState.set("client_id",client_id) unless _.isUndefined(client_id)
     result = AV.realtime
-      appId: @appid
-      clientId: @currentClient.room_name + ':' + @currentClient.client_id
+      appId: @baseState.get('appid')
+      clientId: @baseState.get('room_name') + ':' + @baseState.get("client_id")
       secure: false
-    @currentClient.realtime = result
+    @baseState.set("realtime",result)
     return result
 
   getConversation : ->
     promise = new AV.Promise
-    AV.initialize(@appid,@secret)
+    AV.initialize(@baseState.get('appid'),@baseState.get('secret'))
     conv = AV.Object.extend('_conversation')
     q = new AV.Query(conv)
-    q.equalTo('attr.room_id',@currentClient.room_name)
+    q.equalTo('attr.room_id',@baseState.get('room_name'))
     q.find({
       success: (response) =>
         conv_id = response[0]?.id||"null"
-        @currentClient.members = response[0].attributes.m
-        @currentClient.conv_id = conv_id
+        @baseState.set("members",response[0].attributes.m)
+        @baseState.set("conv_id",conv_id)
         $(document).trigger("conversation_id:Got")
         promise.resolve(conv_id)
       error: (err)=>
@@ -58,10 +55,10 @@ YouYuChatBase = {
   connectRoom : ->
     promise = new AV.Promise
     @createRealtime()
-    realtime = @currentClient.realtime
+    realtime = @baseState.get('realtime')
     realtime.on 'open',=>
-      realtime.room(@currentClient.conv_id,(room)=>
-        @currentClient.room = room
+      realtime.room(@baseState.get('conv_id'),(room)=>
+        @baseState.set("room",room)
         $(document).trigger("room:connected")
         return promise.resolve(room)
       )
@@ -69,19 +66,19 @@ YouYuChatBase = {
   createRoom : (room_name,client_id)->
     promise = new AV.Promise
     @createRealtime(client_id)
-    realtime = @currentClient.realtime
-    @currentClient.room_name = room_name
-    @currentClient.client_id = client_id
+    realtime = @baseState.get("realtime")
+    @baseState.set("room_name",room_name)
+    @baseState.set("client_id",client_id)
     realtime.on 'open',=>
       realtime.room({
-        name: @currentClient.room_name
-        attr: {room_id: @currentClient.room_name}
+        name: @baseState.get('room_name')
+        attr: {room_id: @baseState.get('room_name')}
         members: [
-          @currentClient.room_name + ":" + @currentClient.client_id
+          @baseState.get('room_name') + ":" + @baseState.get("client_id")
         ]
       },
       (room) =>
-        @currentClient.room = room
+        @baseState.set('room',room)
         $(document).trigger("room:created")
         return promise.resolve(room)
       )
@@ -96,23 +93,23 @@ YouYuChatBase = {
 
   getLog : (room) ->
     promise  = new AV.Promise
-    @room = room
-    if (@logFlag)
+    @baseState.set('room',room)
+    if (@baseState.get('logFlag'))
         return
     else
       # 标记正在拉取
-      @logFlag = true
+      @baseState.set('logFlag',true)
     room.log({
-      t: @msgTime
+      t: @baseState.get('msgTime')
     }
     (data)=>
-      @logFlag = false
+      @baseState.set('logFlag',false)
       # 存储下最早一条的消息时间戳
       l = data.length
       if(l)
-        @msgTime = data[0].timestamp
+        @baseState.set('msgTime',data[0].timestamp)
         data.reverse()
-      @log = data
+      @baseState.set('log',data)
       $(document).trigger("log:got")
       promise.resolve(data)
     )

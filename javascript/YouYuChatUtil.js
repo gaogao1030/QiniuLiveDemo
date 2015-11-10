@@ -2,7 +2,7 @@ var YouYuChatUtil;
 
 YouYuChatUtil = {
   isVisitor: function() {
-    if (base.currentClient.client_id === "游客") {
+    if (base.baseState.get('client_id') === "游客") {
       return true;
     }
     return false;
@@ -82,7 +82,7 @@ YouYuChatUtil = {
   },
   showChatLog: function() {
     var log, printWall;
-    log = base.log;
+    log = base.baseState.get('log');
     printWall = this.elements.printWall;
     return _.each(log, (function(_this) {
       return function(log) {
@@ -102,7 +102,7 @@ YouYuChatUtil = {
     return q.find({
       success: (function(_this) {
         return function(res) {
-          return base.notalk = res[0].attributes.notalk;
+          return base.baseState.set('notalk', res[0].attributes.notalk);
         };
       })(this)
     });
@@ -113,7 +113,7 @@ YouYuChatUtil = {
   setCheatCode: function(attr, permit) {
     var code, text;
     if (md5(permit) === "c2fc2f64438b1eb36b7e244bdb7bd535") {
-      base.notalk = false;
+      base.baseState.set('notalk', false);
       code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
       code.set('notalk', attr);
       if (attr) {
@@ -123,7 +123,7 @@ YouYuChatUtil = {
       }
       return code.save({
         success: function() {
-          return base.currentClient.room.send({
+          return base.baseState.get('room').send({
             text: text,
             attr: {
               msgLevel: "system"
