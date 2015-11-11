@@ -39,7 +39,10 @@ visitorAccess = ->
 
   $(document).on "visitor:confirmName:click", ->
     client_id = util.elements.inputNickName.val()
-    base.baseState.set('client_id',client_id)
-    unless util.isEmptyString(client_id)
-      base.closeRealTime base.baseState.get('realtime')
-      util.elements.changeName.modal("hide")
+    if util.inWhiteList(client_id)
+      base.baseState.set('client_id',client_id)
+      unless util.isEmptyString(client_id)
+        base.closeRealTime base.baseState.get('realtime')
+        util.elements.changeName.modal("hide")
+    else
+      alert "你输入的昵称不在白名单中"

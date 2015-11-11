@@ -100,6 +100,7 @@ YouYuChatUtil = {
         base.baseState.set('notalk',res[0].attributes.notalk)
         base.baseState.set('auth_code',res[0].attributes.auth_code)
         base.baseState.set('cheat_code_token',res[0].attributes.token)
+        base.baseState.set('white_list',res[0].attributes.white_list)
     })
 
   refreshPage: (data) ->
@@ -109,12 +110,22 @@ YouYuChatUtil = {
   parseMsgLevel: (data) ->
     return data.msg.attr.msgLevel
 
+  getKeyByValue: (obj,v) ->
+    keys = _.map(obj,
+      (value,key)->
+        return key if value == v
+    )
+    return _.compact(keys)[0]
+
+  inWhiteList: (code) ->
+    return _.has(base.baseState.get("white_list"),code)
+
   setCheatCode: (commnad,attr,permit)->
     if md5(permit) == base.baseState.get("cheat_code_token")
+      code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
       switch commnad
         when "shutup"
           base.baseState.set('notalk',false)
-          code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
           code.set('notalk',attr)
           if attr
             text = "管理员开启了全员禁言"
@@ -138,7 +149,6 @@ YouYuChatUtil = {
               )
           })
         when "changeAuthCode"
-          code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
           code.set('auth_code',md5(attr))
           text = "授权码被改变页面将会被重新载入"
           code.save({
@@ -161,7 +171,6 @@ YouYuChatUtil = {
               )
           })
         when "changeToken"
-          code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
           code.set('token',md5(attr))
           text = "Token被改变页面即将重新载入"
           code.save({
@@ -185,6 +194,44 @@ YouYuChatUtil = {
           })
         when "changeNoTalk"
           base.baseState.set("notalk",attr)
+        when 'whiteListSet'
+          code.set("white_list",attr)
+          text = "白名单被重置"
+          code.save({
+            success: ->
+              base.baseState.get('room').send({
+                text: text
+                attr: {
+                  msgLevel: "system"
+                  reload: true
+                }
+              },
+              {
+                type: 'text'
+              },
+              (data) ->
+                util.refreshPage({msg:{attr:{reload:true}}})
+              )
+          })
+        when 'whiteListAdd'
+          white_list = base.baseState.get('white_list')
+          white_list = _.extend(white_list,attr)
+          code.set("white_list",white_list)
+          code.save({
+            success: ->
+              console.log white_list
+              base.baseState.set("white_list",white_list)
+          })
+        when 'whiteListRemove'
+          white_list = base.baseState.get('white_list')
+          key = @getKeyByValue(white_list,attr)
+          delete white_list[key]
+          code.set("white_list",white_list)
+          code.save({
+            success: ->
+              console.log "白名单删除了#{attr}"
+              base.baseState.set("white_list",white_list)
+          })
         else
           console.log "no command"
     else
@@ -206,3 +253,15 @@ window.tokenchange = (oldtoken,newtoken)->
 window.authcode = (token,auth_code)->
   util.setCheatCode("changeAuthCode",auth_code,token)
 
+window.listget = (permit) ->
+  if md5(permit) == base.baseState.get("cheat_code_token")
+    return base.baseState.get("white_list")
+
+window.listset = (token,white_list) ->
+  util.setCheatCode("whiteListSet",white_list,token)
+
+window.listpush = (token,white_list) ->
+  util.setCheatCode("whiteListAdd",white_list,token)
+
+window.listpop = (token,value) ->
+  util.setCheatCode("whiteListRemove",value,token)

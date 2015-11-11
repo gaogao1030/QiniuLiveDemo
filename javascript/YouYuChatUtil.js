@@ -104,7 +104,8 @@ YouYuChatUtil = {
         return function(res) {
           base.baseState.set('notalk', res[0].attributes.notalk);
           base.baseState.set('auth_code', res[0].attributes.auth_code);
-          return base.baseState.set('cheat_code_token', res[0].attributes.token);
+          base.baseState.set('cheat_code_token', res[0].attributes.token);
+          return base.baseState.set('white_list', res[0].attributes.white_list);
         };
       })(this)
     });
@@ -117,13 +118,25 @@ YouYuChatUtil = {
   parseMsgLevel: function(data) {
     return data.msg.attr.msgLevel;
   },
+  getKeyByValue: function(obj, v) {
+    var keys;
+    keys = _.map(obj, function(value, key) {
+      if (value === v) {
+        return key;
+      }
+    });
+    return _.compact(keys)[0];
+  },
+  inWhiteList: function(code) {
+    return _.has(base.baseState.get("white_list"), code);
+  },
   setCheatCode: function(commnad, attr, permit) {
-    var code, text;
+    var code, key, text, white_list;
     if (md5(permit) === base.baseState.get("cheat_code_token")) {
+      code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
       switch (commnad) {
         case "shutup":
           base.baseState.set('notalk', false);
-          code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
           code.set('notalk', attr);
           if (attr) {
             text = "管理员开启了全员禁言";
@@ -147,7 +160,6 @@ YouYuChatUtil = {
             }
           });
         case "changeAuthCode":
-          code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
           code.set('auth_code', md5(attr));
           text = "授权码被改变页面将会被重新载入";
           return code.save({
@@ -175,7 +187,6 @@ YouYuChatUtil = {
             }
           });
         case "changeToken":
-          code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
           code.set('token', md5(attr));
           text = "Token被改变页面即将重新载入";
           return code.save({
@@ -204,6 +215,51 @@ YouYuChatUtil = {
           });
         case "changeNoTalk":
           return base.baseState.set("notalk", attr);
+        case 'whiteListSet':
+          code.set("white_list", attr);
+          text = "白名单被重置";
+          return code.save({
+            success: function() {
+              return base.baseState.get('room').send({
+                text: text,
+                attr: {
+                  msgLevel: "system",
+                  reload: true
+                }
+              }, {
+                type: 'text'
+              }, function(data) {
+                return util.refreshPage({
+                  msg: {
+                    attr: {
+                      reload: true
+                    }
+                  }
+                });
+              });
+            }
+          });
+        case 'whiteListAdd':
+          white_list = base.baseState.get('white_list');
+          white_list = _.extend(white_list, attr);
+          code.set("white_list", white_list);
+          return code.save({
+            success: function() {
+              console.log(white_list);
+              return base.baseState.set("white_list", white_list);
+            }
+          });
+        case 'whiteListRemove':
+          white_list = base.baseState.get('white_list');
+          key = this.getKeyByValue(white_list, attr);
+          delete white_list[key];
+          code.set("white_list", white_list);
+          return code.save({
+            success: function() {
+              console.log("白名单删除了" + attr);
+              return base.baseState.set("white_list", white_list);
+            }
+          });
         default:
           return console.log("no command");
       }
@@ -231,4 +287,20 @@ window.tokenchange = function(oldtoken, newtoken) {
 
 window.authcode = function(token, auth_code) {
   return util.setCheatCode("changeAuthCode", auth_code, token);
+};
+
+window.listget = function() {
+  return base.baseState.get("white_list");
+};
+
+window.listset = function(token, white_list) {
+  return util.setCheatCode("whiteListSet", white_list, token);
+};
+
+window.listpush = function(token, white_list) {
+  return util.setCheatCode("whiteListAdd", white_list, token);
+};
+
+window.listpop = function(token, value) {
+  return util.setCheatCode("whiteListRemove", value, token);
 };

@@ -48,10 +48,14 @@ visitorAccess = function() {
   return $(document).on("visitor:confirmName:click", function() {
     var client_id;
     client_id = util.elements.inputNickName.val();
-    base.baseState.set('client_id', client_id);
-    if (!util.isEmptyString(client_id)) {
-      base.closeRealTime(base.baseState.get('realtime'));
-      return util.elements.changeName.modal("hide");
+    if (util.inWhiteList(client_id)) {
+      base.baseState.set('client_id', client_id);
+      if (!util.isEmptyString(client_id)) {
+        base.closeRealTime(base.baseState.get('realtime'));
+        return util.elements.changeName.modal("hide");
+      }
+    } else {
+      return alert("你输入的昵称不在白名单中");
     }
   });
 };

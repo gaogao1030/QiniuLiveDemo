@@ -15,6 +15,7 @@ YouYuChatBase = {
       #conv_id
       #members
       #notalk
+      #whiteList: {}
     }
     return {
       set: (key,value)->
