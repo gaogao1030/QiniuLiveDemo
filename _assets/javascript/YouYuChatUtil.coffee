@@ -90,6 +90,8 @@ YouYuChatUtil = {
     template = @template(@templates.showmymsg,{msg_time:@formatTime(data.t),from_name: util.parseClientIdToName(base.baseState.get('client_id')),text: @encodeHTML(text)})
     @renderToPrintWall(template,isBefore)
 
+  showBroadCast: (notice,isBefore) ->
+    util.renderToPrintWall(notice.msg.text,isBefore)
 
   showSystemMsg: (data,isBefore) ->
     if(data.msg.type)
@@ -105,6 +107,8 @@ YouYuChatUtil = {
     _.each(log,(log) =>
       if @parseMsgLevel(log) == "member"
         @showMsg(log, true)
+      #else if @parseMsgLevel(log) == "broad_cast" #broad_cast 设置为暂态消息不会有日志
+      #  @showBroadCast(log, true)
       else
         @showSystemMsg(log, true)
     )

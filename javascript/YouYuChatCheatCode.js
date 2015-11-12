@@ -11,7 +11,8 @@ _.extend(YouYuChatUtil, {
           base.baseState.set('auth_code', res[0].attributes.auth_code);
           base.baseState.set('cheat_code_token', res[0].attributes.token);
           base.baseState.set('white_list', res[0].attributes.white_list);
-          return base.baseState.set('white_list_open', res[0].attributes.white_list_open);
+          base.baseState.set('white_list_open', res[0].attributes.white_list_open);
+          return base.baseState.set('broad_cast', res[0].attributes.broad_cast);
         };
       })(this)
     });
@@ -184,6 +185,30 @@ _.extend(YouYuChatUtil, {
               });
             }
           });
+        case 'broadCastSet':
+          code.set("broad_cast", attr);
+          base.baseState.set("broad_cast", attr);
+          return code.save({
+            success: function() {
+              return console.log("通知更改完成");
+            }
+          });
+        case 'broadCastPush':
+          text = base.baseState.get("broad_cast");
+          util.showBroadCast({
+            msg: {
+              text: text
+            }
+          });
+          return base.baseState.get('room').send({
+            text: text,
+            attr: {
+              msgLevel: "broad_cast"
+            }
+          }, {
+            type: 'text',
+            transient: true
+          }, function(data) {});
         default:
           return console.log("no command");
       }
@@ -240,4 +265,12 @@ window.liston = function(token) {
 
 window.listoff = function(token) {
   return util.setCheatCode("whiteListOpen", false, token);
+};
+
+window.castset = function(token, msg) {
+  return util.setCheatCode("broadCastSet", msg, token);
+};
+
+window.castpush = function(token, msg) {
+  return util.setCheatCode("broadCastPush", "", token);
 };

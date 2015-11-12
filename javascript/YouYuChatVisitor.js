@@ -6,7 +6,12 @@ visitorAccess = function() {
   });
   $(document).on("visitor:room:connected", function() {
     var realtime, room;
-    util.showInfo("欢迎来到有渔直播室，请点击消息框输入您的姓名后再发言");
+    util.showInfo("欢迎来到有渔直播课堂，您可通过下方聊天框与直播老师互动。");
+    util.showBroadCast({
+      msg: {
+        text: base.baseState.get('broad_cast')
+      }
+    });
     room = base.baseState.get('room');
     realtime = base.baseState.get('realtime');
     room.join(function() {
@@ -16,6 +21,8 @@ visitorAccess = function() {
       util.refreshPage(data);
       if (util.parseMsgLevel(data) === "member") {
         return util.showMsg(data);
+      } else if (util.parseMsgLevel(data) === "broad_cast") {
+        return util.showBroadCast(data);
       } else {
         return util.showSystemMsg(data);
       }

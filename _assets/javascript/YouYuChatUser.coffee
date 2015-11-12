@@ -12,6 +12,8 @@ userAccess = ->
       util.refreshPage(data)
       if  util.parseMsgLevel(data) == "member"
         util.showMsg(data)
+      else if util.parseMsgLevel(data) == "broad_cast"
+        util.showBroadCast(data)
       else
         util.getCheatCode().then(
           ->

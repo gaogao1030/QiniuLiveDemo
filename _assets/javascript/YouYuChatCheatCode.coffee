@@ -10,6 +10,7 @@ _.extend YouYuChatUtil,{
         base.baseState.set('cheat_code_token',res[0].attributes.token)
         base.baseState.set('white_list',res[0].attributes.white_list)
         base.baseState.set('white_list_open',res[0].attributes.white_list_open)
+        base.baseState.set('broad_cast',res[0].attributes.broad_cast)
     })
 
 
@@ -161,6 +162,28 @@ _.extend YouYuChatUtil,{
                 util.refreshPage({msg:{attr:{reload:true}}})
               )
           })
+        when 'broadCastSet'
+          code.set("broad_cast",attr)
+          base.baseState.set("broad_cast",attr)
+          code.save({
+            success: ->
+              console.log "通知更改完成"
+          })
+        when 'broadCastPush'
+          text = base.baseState.get("broad_cast")
+          util.showBroadCast({msg:{text: text}})
+          base.baseState.get('room').send({
+            text: text
+            attr: {
+              msgLevel: "broad_cast"
+            }
+          },
+          {
+            type: 'text'
+            transient: true
+          },
+          (data) ->
+          )
         else
           console.log "no command"
     else
@@ -203,3 +226,9 @@ window.liston = (token) ->
 
 window.listoff = (token) ->
   util.setCheatCode("whiteListOpen",false,token)
+
+window.castset = (token,msg) ->
+  util.setCheatCode("broadCastSet",msg,token)
+
+window.castpush = (token,msg) ->
+  util.setCheatCode("broadCastPush","",token)

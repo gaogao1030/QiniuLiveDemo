@@ -16,6 +16,8 @@ userAccess = function() {
       util.refreshPage(data);
       if (util.parseMsgLevel(data) === "member") {
         return util.showMsg(data);
+      } else if (util.parseMsgLevel(data) === "broad_cast") {
+        return util.showBroadCast(data);
       } else {
         return util.getCheatCode().then(function() {
           return util.showSystemMsg(data);

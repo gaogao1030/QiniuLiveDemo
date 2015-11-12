@@ -102,6 +102,9 @@ YouYuChatUtil = {
     });
     return this.renderToPrintWall(template, isBefore);
   },
+  showBroadCast: function(notice, isBefore) {
+    return util.renderToPrintWall(notice.msg.text, isBefore);
+  },
   showSystemMsg: function(data, isBefore) {
     var template, text;
     if (data.msg.type) {

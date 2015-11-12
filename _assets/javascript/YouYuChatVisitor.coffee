@@ -3,7 +3,8 @@ visitorAccess = ->
     util.showInfo "正在连接有渔直播室..."
 
   $(document).on "visitor:room:connected",->
-    util.showInfo "欢迎来到有渔直播室，请点击消息框输入您的姓名后再发言"
+    util.showInfo "欢迎来到有渔直播课堂，您可通过下方聊天框与直播老师互动。"
+    util.showBroadCast {msg:{text:base.baseState.get('broad_cast')}}
     room = base.baseState.get('room')
     realtime = base.baseState.get('realtime')
     room.join(->
@@ -13,6 +14,8 @@ visitorAccess = ->
       util.refreshPage(data)
       if  util.parseMsgLevel(data) == "member"
         util.showMsg(data)
+      else if util.parseMsgLevel(data) == "broad_cast"
+        util.showBroadCast(data)
       else
         util.showSystemMsg(data)
     realtime.on 'reuse',->
