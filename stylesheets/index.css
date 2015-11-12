@@ -55,6 +55,10 @@ span.green {
   color: green;
 }
 
+span.info {
+  color: #00aaff;
+}
+
 .video-js .vjs-big-play-button {
   position: relative;
   margin: 0 auto;

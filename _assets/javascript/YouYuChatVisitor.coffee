@@ -1,9 +1,9 @@
 visitorAccess = ->
   $(document).on "visitor:started",->
-    util.showLog "正在连接有渔直播室..."
+    util.showInfo "正在连接有渔直播室..."
 
   $(document).on "visitor:room:connected",->
-    util.showLog "欢迎来到有渔直播室，请点击消息框输入您的姓名后再发言"
+    util.showInfo "欢迎来到有渔直播室，请点击消息框输入您的姓名后再发言"
     room = base.baseState.get('room')
     realtime = base.baseState.get('realtime')
     room.join(->
@@ -16,16 +16,16 @@ visitorAccess = ->
       else
         util.showSystemMsg(data)
     realtime.on 'reuse',->
-      util.showLog "正在重新连接有渔直播聊天系统"
+      util.showInfo "正在重新连接有渔直播聊天系统"
 
     realtime.on 'error',->
-      util.showLog '好像有什么不对劲 请打开console 查看相关日志 '
+      util.showInfo '好像有什么不对劲 请打开console 查看相关日志 '
 
     realtime.on 'join',(res)->
       _.each(res.m, (m)->
         name = m.split(":")[1]
         unless name == base.baseState.get('client_id')
-          util.showLog(name + '加入有渔直播间')
+          util.showInfo(name + '加入有渔直播间')
       )
 
     realtime.on 'kicked',(res) ->

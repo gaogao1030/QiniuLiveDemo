@@ -42,6 +42,13 @@ YouYuChatUtil = {
     }
     return this.scrollToBottomPrintWall();
   },
+  showInfo: function(msg) {
+    var template;
+    template = this.template(this.templates.showinfo, {
+      msg: msg
+    });
+    return this.renderToPrintWall(template);
+  },
   showLog: function(msg, isBefore) {
     var template;
     template = this.template(this.templates.showlog, {
@@ -80,7 +87,7 @@ YouYuChatUtil = {
       template = this.template(this.templates.showmsg, {
         msg_time: this.formatTime(data.timestamp),
         from_name: this.encodeHTML(from_name),
-        text: text
+        text: this.encodeHTML(text)
       });
       return this.renderToPrintWall(template, isBefore);
     }
@@ -90,7 +97,7 @@ YouYuChatUtil = {
     template = this.template(this.templates.showmymsg, {
       msg_time: this.formatTime(data.t),
       from_name: base.baseState.get("client_id"),
-      text: text
+      text: this.encodeHTML(text)
     });
     return this.renderToPrintWall(template, isBefore);
   },

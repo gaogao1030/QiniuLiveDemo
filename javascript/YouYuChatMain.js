@@ -16,7 +16,8 @@ $(document).on("started", function() {
     showlog: $("#showlog"),
     showmsg: $("#showmsg"),
     showsystemmsg: $("#showsystemmsg"),
-    showmymsg: $("#showmymsg")
+    showmymsg: $("#showmymsg"),
+    showinfo: $("#showinfo")
   };
   base.getConversation();
   console.log("started");

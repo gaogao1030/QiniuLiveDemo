@@ -10,7 +10,7 @@ userAccess = function() {
     room = base.baseState.get('room');
     realtime = base.baseState.get('realtime');
     room.join(function() {
-      return util.showLog("你的昵称为" + (base.baseState.get('client_id')) + ",已经可以发言了");
+      return util.showInfo("你的昵称为<span class='green'>" + (base.baseState.get('client_id')) + "</span>,已经可以发言了");
     });
     room.receive(function(data) {
       util.refreshPage(data);
@@ -23,10 +23,10 @@ userAccess = function() {
       }
     });
     realtime.on('reuse', function() {
-      return util.showLog("正在重新连接有渔直播聊天系统");
+      return util.showInfo("正在重新连接有渔直播聊天系统");
     });
     realtime.on('error', function() {
-      return util.showLog('好像有什么不对劲 请打开console 查看相关日志 ');
+      return util.showInfo('好像有什么不对劲 请打开console 查看相关日志 ');
     });
     realtime.on('kicked', function(res) {
       return console.log(res);
@@ -36,7 +36,7 @@ userAccess = function() {
         var name;
         name = m.split(":")[1];
         if (name !== base.baseState.get('client_id')) {
-          return util.showLog(name + '加入有渔直播间');
+          return util.showInfo(name + '加入有渔直播间');
         }
       });
     });

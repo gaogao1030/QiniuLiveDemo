@@ -47,6 +47,10 @@ YouYuChatUtil = {
       printWall.append(template)
     @scrollToBottomPrintWall()
 
+  showInfo:(msg) ->
+    template = @template(@templates.showinfo,{msg:msg})
+    @renderToPrintWall(template)
+
   showLog: (msg, isBefore) ->
     template = @template(@templates.showlog,{msg:@encodeHTML(msg)})
     @renderToPrintWall(template,isBefore)
@@ -78,11 +82,11 @@ YouYuChatUtil = {
     else
       text = data.msg
     unless @isEmptyString(text)
-      template = @template(@templates.showmsg,{msg_time:@formatTime(data.timestamp),from_name: @encodeHTML(from_name),text: text})
+      template = @template(@templates.showmsg,{msg_time:@formatTime(data.timestamp),from_name: @encodeHTML(from_name),text: @encodeHTML(text)})
       @renderToPrintWall(template,isBefore)
 
   showMyMsg: (data,text,isBefore) ->
-    template = @template(@templates.showmymsg,{msg_time:@formatTime(data.t),from_name: base.baseState.get("client_id"),text: text})
+    template = @template(@templates.showmymsg,{msg_time:@formatTime(data.t),from_name: base.baseState.get("client_id"),text: @encodeHTML(text)})
     @renderToPrintWall(template,isBefore)
 
 

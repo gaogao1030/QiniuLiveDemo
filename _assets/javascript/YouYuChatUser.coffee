@@ -6,7 +6,7 @@ userAccess = ->
     room = base.baseState.get('room')
     realtime = base.baseState.get('realtime')
     room.join(->
-      util.showLog "你的昵称为#{base.baseState.get('client_id')},已经可以发言了"
+      util.showInfo "你的昵称为<span class='green'>#{base.baseState.get('client_id')}</span>,已经可以发言了"
     )
     room.receive (data)->
       util.refreshPage(data)
@@ -17,11 +17,12 @@ userAccess = ->
           ->
             util.showSystemMsg(data)
         )
+
     realtime.on 'reuse',->
-      util.showLog "正在重新连接有渔直播聊天系统"
+      util.showInfo "正在重新连接有渔直播聊天系统"
 
     realtime.on 'error',->
-      util.showLog '好像有什么不对劲 请打开console 查看相关日志 '
+      util.showInfo '好像有什么不对劲 请打开console 查看相关日志 '
 
     realtime.on 'kicked',(res) ->
       console.log res
@@ -30,7 +31,7 @@ userAccess = ->
       _.each(res.m, (m)->
         name = m.split(":")[1]
         unless name == base.baseState.get('client_id')
-          util.showLog(name + '加入有渔直播间')
+          util.showInfo(name + '加入有渔直播间')
       )
 
   $(document).on "user:pressEnter", ->

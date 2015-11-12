@@ -16,6 +16,7 @@ $(document).on "started",->
     showmsg: $("#showmsg")
     showsystemmsg: $("#showsystemmsg")
     showmymsg: $("#showmymsg")
+    showinfo: $("#showinfo")
   }
 
   base.getConversation()
