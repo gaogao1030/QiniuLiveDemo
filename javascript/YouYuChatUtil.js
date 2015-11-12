@@ -2,7 +2,9 @@ var YouYuChatUtil;
 
 YouYuChatUtil = {
   isVisitor: function() {
-    if (base.baseState.get('client_id') === "游客") {
+    var blacklist;
+    blacklist = ["游客", ""];
+    if (_.indexOf(blacklist, base.baseState.get('client_id')) !== -1) {
       return true;
     }
     return false;
@@ -44,7 +46,7 @@ YouYuChatUtil = {
     return String(source).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   },
   isEmptyString: function(string) {
-    if (String(string).replace(/^\s+/, '').replace(/\s+$/, '')) {
+    if (String(string).replace(/^\s+/, '').replace(/\s+$/, '') !== "") {
       return false;
     }
     return true;
@@ -105,7 +107,8 @@ YouYuChatUtil = {
           base.baseState.set('notalk', res[0].attributes.notalk);
           base.baseState.set('auth_code', res[0].attributes.auth_code);
           base.baseState.set('cheat_code_token', res[0].attributes.token);
-          return base.baseState.set('white_list', res[0].attributes.white_list);
+          base.baseState.set('white_list', res[0].attributes.white_list);
+          return base.baseState.set('white_list_open', res[0].attributes.white_list_open);
         };
       })(this)
     });
@@ -132,6 +135,7 @@ YouYuChatUtil = {
   },
   setCheatCode: function(commnad, attr, permit) {
     var code, key, text, white_list;
+    permit || (permit = "");
     if (md5(permit) === base.baseState.get("cheat_code_token")) {
       code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
       switch (commnad) {
@@ -260,6 +264,34 @@ YouYuChatUtil = {
               return base.baseState.set("white_list", white_list);
             }
           });
+        case 'whiteListOpen':
+          code.set("white_list_open", attr);
+          if (attr) {
+            text = "开启白名单功能";
+          } else {
+            text = "关闭白名单功能";
+          }
+          return code.save({
+            success: function() {
+              return base.baseState.get('room').send({
+                text: text,
+                attr: {
+                  msgLevel: "system",
+                  reload: true
+                }
+              }, {
+                type: 'text'
+              }, function(data) {
+                return util.refreshPage({
+                  msg: {
+                    attr: {
+                      reload: true
+                    }
+                  }
+                });
+              });
+            }
+          });
         default:
           return console.log("no command");
       }
@@ -289,8 +321,10 @@ window.authcode = function(token, auth_code) {
   return util.setCheatCode("changeAuthCode", auth_code, token);
 };
 
-window.listget = function() {
-  return base.baseState.get("white_list");
+window.listget = function(permit) {
+  if (md5(permit) === base.baseState.get("cheat_code_token")) {
+    return base.baseState.get("white_list");
+  }
 };
 
 window.listset = function(token, white_list) {
@@ -303,4 +337,12 @@ window.listpush = function(token, white_list) {
 
 window.listpop = function(token, value) {
   return util.setCheatCode("whiteListRemove", value, token);
+};
+
+window.liston = function(token) {
+  return util.setCheatCode("whiteListOpen", true, token);
+};
+
+window.listoff = function(token) {
+  return util.setCheatCode("whiteListOpen", false, token);
 };

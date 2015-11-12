@@ -10,7 +10,8 @@ YouYuChatUtil = {
   #  chatArea: $(".chat-area")
   #}
   isVisitor: ->
-    if base.baseState.get('client_id') == "游客"
+    blacklist = ["游客",""]
+    if ( _.indexOf(blacklist,base.baseState.get('client_id')) != -1 )
       return true
     return false
 
@@ -52,7 +53,7 @@ YouYuChatUtil = {
       .replace(/>/g,'&gt;')
 
   isEmptyString: (string)->
-    if String(string).replace(/^\s+/, '').replace(/\s+$/, '')
+    if String(string).replace(/^\s+/, '').replace(/\s+$/, '') != ""
       return false
     return true
 
@@ -101,6 +102,7 @@ YouYuChatUtil = {
         base.baseState.set('auth_code',res[0].attributes.auth_code)
         base.baseState.set('cheat_code_token',res[0].attributes.token)
         base.baseState.set('white_list',res[0].attributes.white_list)
+        base.baseState.set('white_list_open',res[0].attributes.white_list_open)
     })
 
   refreshPage: (data) ->
@@ -121,6 +123,7 @@ YouYuChatUtil = {
     return _.has(base.baseState.get("white_list"),code)
 
   setCheatCode: (commnad,attr,permit)->
+    permit ||= ""
     if md5(permit) == base.baseState.get("cheat_code_token")
       code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
       switch commnad
@@ -232,6 +235,28 @@ YouYuChatUtil = {
               console.log "白名单删除了#{attr}"
               base.baseState.set("white_list",white_list)
           })
+        when 'whiteListOpen'
+          code.set("white_list_open",attr)
+          if attr
+            text = "开启白名单功能"
+          else
+            text = "关闭白名单功能"
+          code.save({
+            success: ->
+              base.baseState.get('room').send({
+                text: text
+                attr: {
+                  msgLevel: "system"
+                  reload: true
+                }
+              },
+              {
+                type: 'text'
+              },
+              (data) ->
+                util.refreshPage({msg:{attr:{reload:true}}})
+              )
+          })
         else
           console.log "no command"
     else
@@ -265,3 +290,9 @@ window.listpush = (token,white_list) ->
 
 window.listpop = (token,value) ->
   util.setCheatCode("whiteListRemove",value,token)
+
+window.liston = (token) ->
+  util.setCheatCode("whiteListOpen",true,token)
+
+window.listoff = (token) ->
+  util.setCheatCode("whiteListOpen",false,token)

@@ -48,11 +48,13 @@ visitorAccess = function() {
   return $(document).on("visitor:confirmName:click", function() {
     var client_id;
     client_id = util.elements.inputNickName.val();
-    if (util.inWhiteList(client_id)) {
+    if (util.inWhiteList(client_id) || !base.baseState.get("white_list_open")) {
       base.baseState.set('client_id', client_id);
       if (!util.isEmptyString(client_id)) {
         base.closeRealTime(base.baseState.get('realtime'));
         return util.elements.changeName.modal("hide");
+      } else {
+        return alert("昵称不能为空");
       }
     } else {
       return alert("你输入的昵称不在白名单中");
