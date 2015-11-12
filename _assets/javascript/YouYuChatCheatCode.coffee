@@ -89,6 +89,8 @@ _.extend YouYuChatUtil,{
           })
         when "changeNoTalk"
           base.baseState.set("notalk",attr)
+        when 'whiteListGet'
+          return base.baseState.get("white_list")
         when 'whiteListSet'
           code.set("white_list",attr)
           text = "白名单被重置"
@@ -206,11 +208,7 @@ window.authcode = (token,auth_code)->
   util.setCheatCode("changeAuthCode",auth_code,token)
 
 window.listget = (token) ->
-  token ||= ""
-  if md5(token) == base.baseState.get("cheat_code_token")
-    return base.baseState.get("white_list")
-  else
-    console.log "permit denied"
+  util.setCheatCode("whiteListGet","",token)
 
 window.listset = (token,white_list) ->
   util.setCheatCode("whiteListSet",white_list,token)

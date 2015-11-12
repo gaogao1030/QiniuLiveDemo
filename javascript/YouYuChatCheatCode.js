@@ -103,6 +103,8 @@ _.extend(YouYuChatUtil, {
           });
         case "changeNoTalk":
           return base.baseState.set("notalk", attr);
+        case 'whiteListGet':
+          return base.baseState.get("white_list");
         case 'whiteListSet':
           code.set("white_list", attr);
           text = "白名单被重置";
@@ -239,12 +241,7 @@ window.authcode = function(token, auth_code) {
 };
 
 window.listget = function(token) {
-  token || (token = "");
-  if (md5(token) === base.baseState.get("cheat_code_token")) {
-    return base.baseState.get("white_list");
-  } else {
-    return console.log("permit denied");
-  }
+  return util.setCheatCode("whiteListGet", "", token);
 };
 
 window.listset = function(token, white_list) {
