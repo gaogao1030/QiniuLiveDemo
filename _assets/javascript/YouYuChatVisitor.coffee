@@ -25,6 +25,7 @@ visitorAccess = ->
       _.each(res.m, (m)->
         name = m.split(":")[1]
         unless name == base.baseState.get('client_id')
+          name = util.parseClientIdToName(name)
           util.showInfo(name + '加入有渔直播间')
       )
 

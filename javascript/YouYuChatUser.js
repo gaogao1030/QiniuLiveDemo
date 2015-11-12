@@ -10,7 +10,7 @@ userAccess = function() {
     room = base.baseState.get('room');
     realtime = base.baseState.get('realtime');
     room.join(function() {
-      return util.showInfo("你的昵称为<span class='green'>" + (base.baseState.get('client_id')) + "</span>,已经可以发言了");
+      return util.showInfo("你的昵称为<span class='green'>" + (util.parseClientIdToName(base.baseState.get('client_id'))) + "</span>,已经可以发言了");
     });
     room.receive(function(data) {
       util.refreshPage(data);
@@ -36,6 +36,7 @@ userAccess = function() {
         var name;
         name = m.split(":")[1];
         if (name !== base.baseState.get('client_id')) {
+          name = util.parseClientIdToName(name);
           return util.showInfo(name + '加入有渔直播间');
         }
       });

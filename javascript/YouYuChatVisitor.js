@@ -31,6 +31,7 @@ visitorAccess = function() {
         var name;
         name = m.split(":")[1];
         if (name !== base.baseState.get('client_id')) {
+          name = util.parseClientIdToName(name);
           return util.showInfo(name + '加入有渔直播间');
         }
       });
