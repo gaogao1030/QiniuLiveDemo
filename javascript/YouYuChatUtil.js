@@ -1,6 +1,11 @@
 var YouYuChatUtil;
 
 YouYuChatUtil = {
+  template: function($template, obj) {
+    var template;
+    template = $template.html();
+    return _.template(template)(obj);
+  },
   isVisitor: function() {
     var blacklist;
     blacklist = ["游客", ""];
@@ -26,21 +31,23 @@ YouYuChatUtil = {
     date = new Date(time);
     return $.format.date(date, "hh:mm:ss");
   },
-  showLog: function(msg, data, isBefore) {
-    var p, printWall;
+  renderToPrintWall: function(template, isBefore) {
+    var printWall;
     printWall = this.elements.printWall;
     printWall.scrollTop(printWall[0].scrollHeight);
-    if (data) {
-      msg = msg + '<span class="strong">' + this.encodeHTML(JSON.stringify(data)) + '</span>';
-    }
-    p = document.createElement('p');
-    p.innerHTML = msg;
     if (isBefore) {
-      $(p).insertBefore(printWall.children()[0]);
+      $(template).insertBefore(printWall.children()[0]);
     } else {
-      printWall.append(p);
+      printWall.append(template);
     }
     return this.scrollToBottomPrintWall();
+  },
+  showLog: function(msg, isBefore) {
+    var template;
+    template = this.template(this.templates.showlog, {
+      msg: this.encodeHTML(msg)
+    });
+    return this.renderToPrintWall(template, isBefore);
   },
   encodeHTML: function(source) {
     return String(source).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -60,7 +67,7 @@ YouYuChatUtil = {
     return printWall.scrollTop(printWall[0].scrollHeight);
   },
   showMsg: function(data, isBefore) {
-    var from, from_name, text;
+    var from, from_name, template, text;
     text = '';
     from = data.fromPeerId;
     from_name = data.fromPeerId.split(":")[1];
@@ -70,17 +77,34 @@ YouYuChatUtil = {
       text = data.msg;
     }
     if (!this.isEmptyString(text)) {
-      return this.showLog(this.formatTime(data.timestamp) + ' ' + this.encodeHTML(from_name) + '： ', text, isBefore);
+      template = this.template(this.templates.showmsg, {
+        msg_time: this.formatTime(data.timestamp),
+        from_name: this.encodeHTML(from_name),
+        text: text
+      });
+      return this.renderToPrintWall(template, isBefore);
     }
   },
+  showMyMsg: function(data, text, isBefore) {
+    var template;
+    template = this.template(this.templates.showmymsg, {
+      msg_time: this.formatTime(data.t),
+      from_name: base.baseState.get("client_id"),
+      text: text
+    });
+    return this.renderToPrintWall(template, isBefore);
+  },
   showSystemMsg: function(data, isBefore) {
-    var text;
+    var template, text;
     if (data.msg.type) {
       text = data.msg.text;
     } else {
       text = data.msg;
     }
-    return this.showLog("<span class='red'>系统提示:" + text + "</span>", "", isBefore);
+    template = this.template(this.templates.showsystemmsg, {
+      text: text
+    });
+    return this.renderToPrintWall(template, isBefore);
   },
   showChatLog: function() {
     var log, printWall;

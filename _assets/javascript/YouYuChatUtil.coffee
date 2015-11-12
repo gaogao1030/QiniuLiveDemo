@@ -9,6 +9,11 @@ YouYuChatUtil = {
   #  changeName: $("#changeName")
   #  chatArea: $(".chat-area")
   #}
+  #
+  template: ($template,obj)->
+    template = $template.html()
+    _.template(template)(obj)
+
   isVisitor: ->
     blacklist = ["游客",""]
     if ( _.indexOf(blacklist,base.baseState.get('client_id')) != -1 )
@@ -33,18 +38,18 @@ YouYuChatUtil = {
     #return $.format.date(date,"yyyy-MM-dd hh:mm:ss")
     return $.format.date(date,"hh:mm:ss")
 
-  showLog: (msg, data, isBefore) ->
+  renderToPrintWall: (template,isBefore) ->
     printWall = @elements.printWall
     printWall.scrollTop(printWall[0].scrollHeight)
-    if (data)
-      msg = msg + '<span class="strong">' + @encodeHTML(JSON.stringify(data)) + '</span>'
-    p = document.createElement('p')
-    p.innerHTML = msg
     if (isBefore)
-      $(p).insertBefore(printWall.children()[0])
+      $(template).insertBefore(printWall.children()[0])
     else
-      printWall.append(p)
+      printWall.append(template)
     @scrollToBottomPrintWall()
+
+  showLog: (msg, isBefore) ->
+    template = @template(@templates.showlog,{msg:@encodeHTML(msg)})
+    @renderToPrintWall(template,isBefore)
 
   encodeHTML:(source) ->
     return String(source)
@@ -73,14 +78,21 @@ YouYuChatUtil = {
     else
       text = data.msg
     unless @isEmptyString(text)
-      @showLog( @formatTime(data.timestamp) + ' ' + @encodeHTML(from_name) + '： ', text, isBefore)
+      template = @template(@templates.showmsg,{msg_time:@formatTime(data.timestamp),from_name: @encodeHTML(from_name),text: text})
+      @renderToPrintWall(template,isBefore)
+
+  showMyMsg: (data,text,isBefore) ->
+    template = @template(@templates.showmymsg,{msg_time:@formatTime(data.t),from_name: base.baseState.get("client_id"),text: text})
+    @renderToPrintWall(template,isBefore)
+
 
   showSystemMsg: (data,isBefore) ->
     if(data.msg.type)
       text = data.msg.text
     else
       text = data.msg
-    @showLog("<span class='red'>系统提示:"+text+"</span>","",isBefore)
+    template = @template(@templates.showsystemmsg,{text:text})
+    @renderToPrintWall(template,isBefore)
 
   showChatLog: ->
     log = base.baseState.get('log')

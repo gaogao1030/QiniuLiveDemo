@@ -58,7 +58,7 @@ userAccess = function() {
           type: 'text'
         }, function(data) {
           util.clearInput();
-          return util.showLog((util.formatTime(data.t)) + " 我：", msg);
+          return util.showMyMsg(data, msg);
         });
       } else {
         alert("请输入点文字");

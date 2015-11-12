@@ -10,6 +10,14 @@ $(document).on "started",->
     chatArea: $(".chat-area")
     modalDialog: $(".modal-dialog")
   }
+
+  YouYuChatUtil.templates = {
+    showlog: $("#showlog")
+    showmsg: $("#showmsg")
+    showsystemmsg: $("#showsystemmsg")
+    showmymsg: $("#showmymsg")
+  }
+
   base.getConversation()
   console.log "started"
   if util.isVisitor()

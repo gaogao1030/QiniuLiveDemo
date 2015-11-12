@@ -52,7 +52,7 @@ userAccess = ->
         },
         (data) ->
           util.clearInput()
-          util.showLog("#{util.formatTime(data.t)} 我：",msg)
+          util.showMyMsg(data,msg)
         )
       else
         alert "请输入点文字"
