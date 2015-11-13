@@ -18,7 +18,7 @@ _.extend(YouYuChatUtil, {
     });
   },
   setCheatCode: function(commnad, attr, permit) {
-    var code, key, text, white_list;
+    var code, key, room, text, white_list;
     permit || (permit = "");
     if (md5(permit) === base.baseState.get("cheat_code_token")) {
       code = AV.Object.createWithoutData('CheatCode', "563c9abb60b2c82f2b951424");
@@ -211,6 +211,11 @@ _.extend(YouYuChatUtil, {
             type: 'text',
             transient: true
           }, function(data) {});
+        case 'getOnlineMemberCount':
+          room = base.baseState.get('room');
+          return room.count(function(data) {
+            return console.log(data);
+          });
         default:
           return console.log("no command");
       }
@@ -270,4 +275,8 @@ window.castset = function(token, msg) {
 
 window.castpush = function(token, msg) {
   return util.setCheatCode("broadCastPush", "", token);
+};
+
+window.onlineCount = function(token) {
+  return util.setCheatCode("getOnlineMemberCount", "", token);
 };

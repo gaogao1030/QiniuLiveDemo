@@ -1,2 +1,4 @@
 /node_modules
 /.sass-cache
+/worker/ping.log
+/worker/ping_err.log
