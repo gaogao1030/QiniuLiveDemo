@@ -94,10 +94,14 @@ emitter.on "realtime:ping", (members,online_members)->
   #console.log room.remove
   room.remove(offline_members,->
     console.log "remove done"
+    current_ping_count = current_ping_count + 1
+    if should_ping_count == current_ping_count
+      emitter.emit "process:done"
   )
-  current_ping_count = current_ping_count + 1
-  if should_ping_count == current_ping_count
-    emitter.emit "process:done"
+  if offline_members.length == 0
+    current_ping_count = current_ping_count + 1
+    if should_ping_count == current_ping_count
+      emitter.emit "process:done"
 
 emitter.on "process:done",->
   process.exit()
