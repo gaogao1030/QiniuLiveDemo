@@ -1,5 +1,5 @@
 {
-  "name": "JK-Uniform",
+  "name": "QiniuLiveDemo",
   "version": "0.0.0",
   "description": "**该仓库的作用是为了避开github page 对jekyll插件的审核,其作用是让直接生成的静态页面显示**",
   "main": "index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gaogao1030/JK-Uniform.git"
+    "url": "https://github.com/gaogao1030/QiniuLiveDemo.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gaogao1030/JK-Uniform.git/issues"
+    "url": "https://github.com/gaogao1030/QiniuLiveDemo.git/issues"
   },
   "devDependencies": {
     "browser-sync": "^2.9.11",
@@ -27,5 +27,13 @@
     "gulp-util": "^3.0.6",
     "gulp-watch": "^4.3.4",
     "yargs": "^3.19.0"
+  },
+  "dependencies": {
+    "events": "^1.1.0",
+    "leancloud-realtime": "^2.3.1",
+    "leanengine": "^0.2.0",
+    "process": "^0.11.2",
+    "underscore": "^1.8.3",
+    "websocket": "^1.0.22"
   }
 }

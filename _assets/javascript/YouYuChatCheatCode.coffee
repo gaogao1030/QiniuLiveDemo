@@ -186,6 +186,11 @@ _.extend YouYuChatUtil,{
           },
           (data) ->
           )
+        when 'getOnlineMemberCount'
+          room = base.baseState.get('room')
+          room.count((data)->
+            console.log data
+          )
         else
           console.log "no command"
     else
@@ -230,3 +235,6 @@ window.castset = (token,msg) ->
 
 window.castpush = (token,msg) ->
   util.setCheatCode("broadCastPush","",token)
+
+window.onlineCount = (token) ->
+  util.setCheatCode("getOnlineMemberCount","",token)
