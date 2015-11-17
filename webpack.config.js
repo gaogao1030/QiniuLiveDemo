@@ -17,12 +17,15 @@ module.exports = {
       'webpack/hot/dev-server',
       'js/YouYuChatBase','js/YouYuChatUtil','js/YouYuChatCheatCode',
       'js/YouYuChatVisitor','js/YouYuChatUser','js/YouYuChatMain',
-      'js/YouYuChatState','js/YouYuChatExpose'
+      'js/YouYuChatState','js/YouYuChatExpose','./_assets/YouYuChatModule'
     ],
     vendor: [
       'bow/leancloud-realtime/dist/AV.realtime.min.js',
-      'bow/video.js/dist/video.min.js',
-      'bow/js-md5/src/md5.js'
+      'bow/js-md5/src/md5.js',
+      'bow/video.js/dist/video.js',
+      'js/initPlayer.coffee',
+      'js/videojs.hls.min.js',
+      'js/videojs-media-sources.js',
     ]
   },
   output: {
@@ -38,8 +41,5 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
-  ],
-  node:{
-    fs:"empty"
-  }
+  ]
 }
