@@ -1,24 +1,32 @@
+YouYuChatBase = require './YouYuChatBase'
+YouYuChatUtil = require './YouYuChatUtil'
+YouYuChatCheatCode = require './YouYuChatCheatCode'
+require './YouYuChatExpose'
+visitorAccess = require './YouYuChatVisitor'
+userAccess = require './YouYuChatUser'
+base = new YouYuChatBase
+util = new YouYuChatUtil
+cheat_code = new YouYuChatCheatCode
+
+registerEvent = ->
+  util.elements().chatArea.on 'keydown', (e)->
+    if e.keyCode == 13
+      $(document).trigger("pressEnter")
+
+  util.elements().modalDialog.on 'keydown', (e)->
+    if e.keyCode == 13
+      $(document).trigger("visitor:confirmName:click")
+
+  util.elements().sendMsgBtn.on 'click', (e)->
+    $(document).trigger("sendMsgBtn:click")
+
+  util.elements().inputSend.on 'click', (e)->
+    $(document).trigger("inputSend:click")
+
+  util.elements().confirmName.on 'click', (e)->
+    $(document).trigger("confirmName:click")
+
 $(document).on "started",->
-  YouYuChatUtil.elements = {
-    body: $("body")
-    printWall: $("#printWall")
-    sendMsgBtn: $("#btnSend")
-    inputSend: $("#chatInput")
-    inputNickName: $("#inputNickName")
-    confirmName: $("#confirmName")
-    changeName: $("#changeName")
-    chatArea: $(".chat-area")
-    modalDialog: $(".modal-dialog")
-  }
-
-  YouYuChatUtil.templates = {
-    showlog: $("#showlog")
-    showmsg: $("#showmsg")
-    showsystemmsg: $("#showsystemmsg")
-    showmymsg: $("#showmymsg")
-    showinfo: $("#showinfo")
-  }
-
   base.getConversation()
   console.log "started"
   if util.isVisitor()
@@ -26,7 +34,7 @@ $(document).on "started",->
     $(document).trigger("visitor:started")
   else
     $(document).trigger("user:started")
-  util.getCheatCode().then(->
+  cheat_code.getCheatCode().then(->
     auth_code = window.location.hash
     if md5(auth_code.slice("1")) != base.baseState.get("auth_code")
       window.location.href="/forbidden"
@@ -84,20 +92,3 @@ visitorAccess()
 userAccess()
 
 
-registerEvent = ->
-  util.elements.chatArea.on 'keydown', (e)->
-    if e.keyCode == 13
-      $(document).trigger("pressEnter")
-
-  util.elements.modalDialog.on 'keydown', (e)->
-    if e.keyCode == 13
-      $(document).trigger("visitor:confirmName:click")
-
-  util.elements.sendMsgBtn.on 'click', (e)->
-    $(document).trigger("sendMsgBtn:click")
-
-  util.elements.inputSend.on 'click', (e)->
-    $(document).trigger("inputSend:click")
-
-  util.elements.confirmName.on 'click', (e)->
-    $(document).trigger("confirmName:click")

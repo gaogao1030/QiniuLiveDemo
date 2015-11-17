@@ -1,6 +1,11 @@
-userAccess = ->
+YouYuChatUtil = require './YouYuChatUtil'
+YouYuChatBase = require './YouYuChatBase'
+util = new YouYuChatUtil
+base = new YouYuChatBase
+
+module.exports = ->
   $(document).on "user:started",->
-    util.elements.sendMsgBtn.attr("disabled",false)
+    util.elements().sendMsgBtn.attr("disabled",false)
     console.log "user:started"
   $(document).on "user:room:connected",->
     room = base.baseState.get('room')
@@ -38,7 +43,7 @@ userAccess = ->
       )
 
   $(document).on "user:pressEnter", ->
-    msg = util.elements.inputSend.val()
+    msg = util.elements().inputSend.val()
     room = base.baseState.get('room')
     if base.baseState.get('notalk')
       alert "目前是禁止发言状态"

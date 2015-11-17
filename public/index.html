@@ -30,21 +30,15 @@ WEB_SOCKET_SWF_LOCATION = "bower_components/leancloud-realtime/plugin/web-socket
 <link href="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 <link href="/bower_components/video.js/dist/video-js.min.css" rel="stylesheet">
 <link href="/stylesheets/index.css" rel="stylesheet">
+<script src="/webpack-dev-server.js"></script>
 <script src="http://cdn.staticfile.org/underscore.js/1.7.0/underscore-min.js"></script>
 <script src="https://cdn1.lncld.net/static/js/av-mini-0.6.4.js"></script>
-<script src="/bower_components/leancloud-realtime/dist/AV.realtime.min.js"></script>
-<script src="/bower_components/video.js/dist/video.min.js"></script>
 <script src="http://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://cdn.staticfile.org/jquery-dateFormat/1.0/jquery.dateFormat.min.js"></script>
 <script src="http://cdn.staticfile.org/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <script src="/javascript/videojs-media-sources.js"></script>
-<script src="/bower_components/js-md5/src/md5.js"></script>
-<script src="/javascript/YouYuChatBase.js"></script>
-<script src="/javascript/YouYuChatUtil.js"></script>
-<script src="/javascript/YouYuChatCheatCode.js"></script>
-<script src="/javascript/YouYuChatVisitor.js"></script>
-<script src="/javascript/YouYuChatUser.js"></script>
-<script src="/javascript/YouYuChatMain.js"></script>
+<script src="/assets/YouYuChat.js"></script>
+<script src="/assets/vendor.js"></script>
 <script src="/javascript/initPlayer.js"></script>
 
 
@@ -112,8 +106,6 @@ WEB_SOCKET_SWF_LOCATION = "bower_components/leancloud-realtime/plugin/web-socket
 
 <script type="text/javascript">
   $(document).ready(function(){
-    base=YouYuChatBase
-    util=YouYuChatUtil
     $(document).trigger("started")
   })
 </script>

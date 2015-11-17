@@ -1,4 +1,9 @@
-visitorAccess = ->
+YouYuChatUtil = require './YouYuChatUtil'
+YouYuChatBase = require './YouYuChatBase'
+util = new YouYuChatUtil
+base = new YouYuChatBase
+
+module.exports = ->
   $(document).on "visitor:started",->
     util.showInfo "正在连接有渔直播室..."
 
@@ -39,15 +44,15 @@ visitorAccess = ->
     alert "你目前还未输入姓名，不可以发言"
 
   $(document).on "visitor:inputSend:click", ->
-      util.elements.changeName.modal("show")
+    util.elements().changeName.modal("show")
 
   $(document).on "visitor:confirmName:click", ->
-    client_id = util.elements.inputNickName.val()
+    client_id = util.elements().inputNickName.val()
     if util.inWhiteList(client_id) || !base.baseState.get("white_list_open")
       base.baseState.set('client_id',client_id)
       unless util.isEmptyString(client_id)
         base.closeRealTime base.baseState.get('realtime')
-        util.elements.changeName.modal("hide")
+        util.elements().changeName.modal("hide")
       else
         alert "昵称不能为空"
     else
