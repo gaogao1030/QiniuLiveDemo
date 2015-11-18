@@ -3,3 +3,4 @@
 /worker/ping.log
 /worker/ping_err.log
 /public/build.
+/bower_components
