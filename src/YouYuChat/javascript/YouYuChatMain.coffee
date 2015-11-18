@@ -4,6 +4,7 @@ YouYuChatCheatCode = require './YouYuChatCheatCode'
 require './YouYuChatExpose'
 visitorAccess = require './YouYuChatVisitor'
 userAccess = require './YouYuChatUser'
+md5 = require 'md5'
 base = new YouYuChatBase
 util = new YouYuChatUtil
 cheat_code = new YouYuChatCheatCode
