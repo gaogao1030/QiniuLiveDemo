@@ -1,6 +1,5 @@
 require './stylesheets/YouYuChat.scss'
 require './javascript/YouYuChatMain'
-
 $ ->
   playerContainer = $("<video />", {
       "class": "video-js vjs-default-skin"

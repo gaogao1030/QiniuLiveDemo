@@ -4,7 +4,8 @@
   "description": "**该仓库的作用是为了避开github page 对jekyll插件的审核,其作用是让直接生成的静态页面显示**",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./server.js",
+    "compile": "./node_modules/webpack/bin/webpack.js -p --config ./webpack.production.config.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
     "css-loader": "^0.23.0",
     "engine.io-client": "^1.5.4",
     "events": "^1.1.0",
+    "is-buffer": "^1.1.0",
+    "lazy-cache": "^0.2.4",
     "leancloud-realtime": "^2.3.1",
     "leanengine": "^0.2.0",
     "md5": "^2.0.0",
@@ -36,9 +39,5 @@
     "underscore": "^1.8.3",
     "webpack": "^1.12.6",
     "webpack-dev-server": "^1.12.1"
-  },
-  "scripts": {
-    "start": "node ./server.js",
-    "compile": "./node_modules/webpack/bin/webpack.js -p --config ./webpack.production.config.js"
   }
 }

@@ -69,6 +69,10 @@ module.exports = do ->
 
   $(document).on "log:got",->
     util.showChatLog()
+    util.fetchOnlineUser().then((online_members)->
+      online_members = _.without online_members,"qiniuLive:游客"
+      util.showSystemMsg({msg:"当前登录用户有#{online_members.length}人"})
+    )
     console.log "log got"
 
   $(document).on "pressEnter", ->
@@ -89,6 +93,20 @@ module.exports = do ->
   $(document).on "confirmName:click", ->
     console.log "click conrfirmName"
     $(document).trigger("visitor:confirmName:click") if util.isVisitor()
+
+  $(document).on "fetchOnlineUser:done", ->
+    console.log "fetchOnlineUser done"
+    online_members = base.baseState.get("online_members")
+    members = base.baseState.get("members")
+    room = base.baseState.get("room")
+    offline_members = _.filter(members,(member)->
+      return member if online_members.indexOf(member) == -1
+    )
+    online_members = _.without online_members,"qiniuLive:游客"
+    console.log offline_members
+    room.remove(offline_members,->
+      console.log "remove done"
+    )
 
   visitorAccess()
   userAccess()

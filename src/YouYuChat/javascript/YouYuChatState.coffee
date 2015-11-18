@@ -15,4 +15,5 @@ module.exports = ->
     notalk: false
     white_list: {}
     white_list_open: true
+    online_members: []
   }

@@ -12,6 +12,10 @@ module.exports = ->
     realtime = base.baseState.get('realtime')
     room.join(->
       util.showInfo "你的昵称为<span class='green'>#{util.parseClientIdToName(base.baseState.get('client_id'))}</span>,已经可以发言了"
+      util.fetchOnlineUser().then((online_members)->
+        online_members = _.without online_members,"qiniuLive:游客"
+        util.showSystemMsg({msg:"当前登录用户有#{online_members.length}人"})
+      )
     )
     room.receive (data)->
       util.refreshPage(data)
@@ -33,13 +37,24 @@ module.exports = ->
 
     realtime.on 'kicked',(res) ->
       console.log res
+      util.showSystemMsg({msg:"你已经被踢出该房间"})
+
+    realtime.on 'membersleft',(res) ->
+      _.each(res.m,(m)->
+        clientId = m.split(":")[1]
+        console.log "#{util.parseClientIdToName(clientId)}离开了房间"
+      )
 
     realtime.on 'join',(res)->
       _.each(res.m, (m)->
         name = m.split(":")[1]
-        unless name == base.baseState.get('client_id')
+        unless name == base.baseState.get('client_id') or name == "游客"
           name = util.parseClientIdToName(name)
           util.showInfo(name + '加入有渔直播间')
+          util.fetchOnlineUser().then((online_members)->
+            online_members = _.without online_members,"qiniuLive:游客"
+            util.showSystemMsg({msg:"当前登录用户有#{online_members.length}人"})
+          )
       )
 
   $(document).on "user:pressEnter", ->

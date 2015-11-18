@@ -35,10 +35,21 @@ module.exports = ->
         unless name == base.baseState.get('client_id')
           name = util.parseClientIdToName(name)
           util.showInfo(name + '加入有渔直播间')
+          util.fetchOnlineUser().then((online_members)->
+            online_members = _.without online_members,"qiniuLive:游客"
+            util.showSystemMsg({msg:"当前登录用户有#{online_members.length}人"})
+          )
       )
 
     realtime.on 'kicked',(res) ->
       console.log res
+      util.showSystemMsg({msg:"你已经被踢出该房间"})
+
+    realtime.on 'membersleft',(res) ->
+      _.each(res.m,(m)->
+        clientId = m.split(":")[1]
+        console.log "#{util.parseClientIdToName(clientId)}离开了房间"
+      )
 
   $(document).on "visitor:pressEnter", ->
     alert "你目前还未输入姓名，不可以发言"

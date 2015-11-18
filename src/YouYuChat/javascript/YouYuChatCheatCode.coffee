@@ -193,10 +193,14 @@ module.exports = ->
             },
             (data) ->
             )
-          when 'getOnlineMemberCount'
-            room = base.baseState.get('room')
-            room.count((data)->
-              console.log data
+          when 'getOnlineUser'
+            util.fetchOnlineUser().then((online_members)->
+              console.log online_members
+            )
+          when 'getOnlineUserCount'
+            util.fetchOnlineUser().then((online_members)->
+              online_members = _.without online_members,"qiniuLive:游客"
+              console.log online_members.length
             )
           else
             console.log "no command"

@@ -41,5 +41,8 @@ module.exports = do ->
   window.castpush = (token,msg) ->
     cheat_code.setCheatCode("broadCastPush","",token)
 
-  window.onlineCount = (token) ->
-    cheat_code.setCheatCode("getOnlineMemberCount","",token)
+  window.onlineUser = (token) ->
+    cheat_code.setCheatCode("getOnlineUser","",token)
+
+  window.onlineUserCount = (token) ->
+    cheat_code.setCheatCode("getOnlineUserCount","",token)

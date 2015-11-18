@@ -153,4 +153,56 @@ module.exports = ->
     inWhiteList: (code) ->
       return _.has(base.baseState.get("white_list"),code)
 
+    getSliceCount: ->
+      slice_count = []
+      init_count = 0
+      return sliceCount = (length)->
+        if init_count >= length
+          return slice_count
+        else
+          init_count = init_count+20
+          slice_count.push init_count
+          sliceCount(length)
+
+    getSliceMember: (members,slice_count)->
+      slice_members = []
+      init_count = 0
+      _.each(slice_count,(count)->
+        slice_members.push members.slice(init_count,count)
+        init_count = count
+      )
+      return slice_members
+
+    fetchOnlineUser: ->
+      promise = new AV.Promise
+      conv = AV.Object.extend('_conversation')
+      q = new AV.Query(conv)
+      q.equalTo('attr.room_id',base.baseState.get('room_name'))
+      q.find({
+        success: (response) =>
+          conv_id = response[0]?.id||"null"
+          base.baseState.set("members",response[0].attributes.m)
+          realtime = base.baseState.get('realtime')
+          members = base.baseState.get('members')
+          m_count = members.length
+          online_members = []
+          sliceCount = @getSliceCount()
+          slice_count = sliceCount(m_count)
+          should_ping_count = slice_count.length
+          current_ping_count = 0
+          slice_members = @getSliceMember(members,slice_count)
+          _.each(slice_members,(members)->
+            realtime.ping(members,(data)->
+              current_ping_count += 1
+              online_members.push data
+              if current_ping_count == should_ping_count
+                online_members = _.flatten online_members
+                base.baseState.set("online_members",online_members)
+                promise.resolve(base.baseState.get("online_members"))
+                $(document).trigger("fetchOnlineUser:done")
+            )
+          )
+        error: (err)=>
+      })
+      return promise
   }
