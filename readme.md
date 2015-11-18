@@ -1,11 +1,11 @@
-**get stared**
+#get stared
 
 * npm install
 
-** dev mode
+**dev mode**
 
 * npm start
 
-** production mode
+**production mode**
 
 * npm run compile
