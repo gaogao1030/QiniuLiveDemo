@@ -6,8 +6,11 @@ var compiler = webpack(config);
 var server = new webpackDevServer(compiler,
       {
         contentBase: "./public",
-        publicPath: "/assets",
+        publicPath: "/build/",
         hot: true,
+        stats: {
+          colors: true
+        }
       }
     );
 

@@ -1,7 +1,6 @@
 var webpack = require("webpack");
 var path = require("path");
 
-
 module.exports = {
   resolve: {
     fallback: path.join(__dirname,"node_modules"),
@@ -12,10 +11,9 @@ module.exports = {
     },
     extensions: ["",".js",".coffee"]
   },
+  devtool: 'source-map',
   entry: {
     YouYuChat: [
-      'webpack-dev-server/client?http://0.0.0.0:4000',
-      'webpack/hot/dev-server',
       'YouYuChat/YouYuChatEnter'
     ]
   },
