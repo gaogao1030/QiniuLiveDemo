@@ -7,6 +7,9 @@ body {
   left: 0;
   position: absolute;
   height: 100%;
+  &.remove {
+    width:0;
+  }
 }
 
 .chat-area {
@@ -15,6 +18,10 @@ body {
   right:0;
   height: 100%;
   background-color:#fff;
+  &.full {
+    width: 100%;
+    z-index:100;
+  }
 }
 
 .video-container {

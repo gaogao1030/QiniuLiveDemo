@@ -52,10 +52,9 @@ module.exports = do ->
   window.noticeset = (token,attr) ->
     cheat_code.setCheatCode("noticeSet",attr,token)
 
-  window.screenoff = ->
+  window.screentoggle = ->
     $livearea = $(".live-area")
     $chatarea = $(".chat-area")
-    $livearea.remove()
-    $chatarea.css("width","100%")
-
+    $livearea.toggleClass("remove")
+    $chatarea.toggleClass("full")
 
