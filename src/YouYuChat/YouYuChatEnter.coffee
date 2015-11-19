@@ -1,5 +1,6 @@
 require './stylesheets/YouYuChat.scss'
 require './javascript/YouYuChatMain'
+
 $ ->
   playerContainer = $("<video />", {
       "class": "video-js vjs-default-skin"
@@ -26,6 +27,7 @@ $ ->
       $live_area = $(".live-area")
       width = $live_area.width()
       @on 'loadeddata', ->
+        $(".cover").remove()
         $live_area.css(width: "79%")
         setTimeout =>
           $live_area.css(width: "80%")

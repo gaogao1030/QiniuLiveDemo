@@ -1,7 +1,6 @@
 var webpack = require("webpack");
 var path = require("path");
 
-
 module.exports = {
   resolve: {
     fallback: path.join(__dirname,"node_modules"),
@@ -31,6 +30,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.optimize.CommonsChunkPlugin("common","common.js"),
+    new webpack.HotModuleReplacementPlugin()
   ]
 }

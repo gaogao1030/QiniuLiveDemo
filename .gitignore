@@ -2,5 +2,6 @@
 /.sass-cache
 /worker/ping.log
 /worker/ping_err.log
-/public/build.
+/public/build
 /bower_components
+npm-debug.log

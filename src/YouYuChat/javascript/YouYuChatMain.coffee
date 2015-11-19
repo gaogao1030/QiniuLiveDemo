@@ -37,6 +37,15 @@ module.exports = do ->
     else
       $(document).trigger("user:started")
     cheat_code.getCheatCode().then(->
+      $coverText = util.elements().coverText
+      $coverText.append(base.baseState.get("notice"))
+      height = $coverText.height()
+      width = $coverText.width()
+      $coverText.addClass("cover-rendered")
+      $coverText.css(
+        "height": height,
+        "width": width
+      )
       auth_code = window.location.hash
       if md5(auth_code.slice("1")) != base.baseState.get("auth_code")
         window.location.href="/forbidden"

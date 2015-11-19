@@ -18,6 +18,7 @@ module.exports = ->
           base.baseState.set('white_list',res[0].attributes.white_list)
           base.baseState.set('white_list_open',res[0].attributes.white_list_open)
           base.baseState.set('broad_cast',res[0].attributes.broad_cast)
+          base.baseState.set('notice',res[0].attributes.notice)
       })
 
 
@@ -176,7 +177,7 @@ module.exports = ->
             base.baseState.set("broad_cast",attr)
             code.save({
               success: ->
-                console.log "通知更改完成"
+                console.log "广播更改完成"
             })
           when 'broadCastPush'
             text = base.baseState.get("broad_cast")
@@ -193,6 +194,13 @@ module.exports = ->
             },
             (data) ->
             )
+          when 'noticeSet'
+            code.set("notice",attr)
+            base.baseState.set("notice",attr)
+            code.save({
+              success: ->
+                console.log "通知更改完成"
+            })
           when 'getOnlineUser'
             util.fetchOnlineUser().then((online_members)->
               console.log online_members

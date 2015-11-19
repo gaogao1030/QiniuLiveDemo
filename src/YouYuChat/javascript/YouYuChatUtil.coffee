@@ -12,6 +12,7 @@ module.exports = ->
       changeName: $("#changeName")
       chatArea: $(".chat-area")
       modalDialog: $(".modal-dialog")
+      coverText: $(".cover-text")
 
     templates: ->
       showlog: $("#showlog")

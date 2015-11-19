@@ -1,5 +1,7 @@
 YouYuChatCheatCode = require './YouYuChatCheatCode'
+YouYuChatUtil = require './YouYuChatUtil'
 cheat_code = new YouYuChatCheatCode
+util = new YouYuChatUtil
 
 module.exports = do ->
   window.talklocal = (token)->
@@ -41,8 +43,19 @@ module.exports = do ->
   window.castpush = (token,msg) ->
     cheat_code.setCheatCode("broadCastPush","",token)
 
-  window.onlineUser = (token) ->
+  window.onlineuser = (token) ->
     cheat_code.setCheatCode("getOnlineUser","",token)
 
-  window.onlineUserCount = (token) ->
+  window.onlineusercount = (token) ->
     cheat_code.setCheatCode("getOnlineUserCount","",token)
+
+  window.noticeset = (token,attr) ->
+    cheat_code.setCheatCode("noticeSet",attr,token)
+
+  window.screenoff = ->
+    $livearea = $(".live-area")
+    $chatarea = $(".chat-area")
+    $livearea.remove()
+    $chatarea.css("width","100%")
+
+
