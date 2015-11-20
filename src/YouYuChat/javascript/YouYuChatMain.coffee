@@ -38,7 +38,7 @@ module.exports = do ->
       $(document).trigger("user:started")
     cheat_code.getCheatCode().then(->
       $coverText = util.elements().coverText
-      $coverText.append(base.baseState.get("notice"))
+      $coverText.html(base.baseState.get("notice"))
       height = $coverText.height()
       width = $coverText.width()
       $coverText.addClass("cover-rendered")
