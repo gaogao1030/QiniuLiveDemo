@@ -16,4 +16,4 @@ copy = ->
 
 $p('npm run compile',[],{},->
     copy()
-  ).out().pipe('git init',[],{cwd: 'publish'}).and('git add .').and('git commit -m"update"')
+  ).out().pipe('git init',[],{cwd: 'publish'}).and('git add .').and('git commit -m "update"')
