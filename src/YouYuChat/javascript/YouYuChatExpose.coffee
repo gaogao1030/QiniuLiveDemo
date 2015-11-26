@@ -19,8 +19,9 @@ module.exports = do ->
   window.authcode = (token,auth_code)->
     cheat_code.setCheatCode("changeAuthCode",auth_code,token)
 
-  window.listget = (token) ->
-    cheat_code.setCheatCode("whiteListGet","",token)
+  window.listget = (token,attr) ->
+    attr ||= false
+    cheat_code.setCheatCode("whiteListGet",{save_as_file: attr},token)
 
   window.listset = (token,white_list) ->
     cheat_code.setCheatCode("whiteListSet",white_list,token)

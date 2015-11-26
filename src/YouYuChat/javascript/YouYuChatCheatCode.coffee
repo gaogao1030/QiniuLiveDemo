@@ -3,6 +3,8 @@ YouYuChatUtil = require './YouYuChatUtil'
 md5 = require 'md5'
 util = new YouYuChatUtil
 base = new YouYuChatBase
+YouYuChatConsole = require './YouYuChatConsole'
+youyu_chat_console = new YouYuChatConsole
 
 module.exports = ->
   YouYuChatCheatCode = {
@@ -98,7 +100,10 @@ module.exports = ->
           when "changeNoTalk"
             base.baseState.set("notalk",attr)
           when 'whiteListGet'
-            return base.baseState.get("white_list")
+            if attr.save_as_file
+              return youyu_chat_console.save(base.baseState.get("white_list"),"whiteList.json")
+            else
+              return base.baseState.get("white_list")
           when 'whiteListSet'
             code.set("white_list",attr)
             text = "白名单被重置"
@@ -129,7 +134,7 @@ module.exports = ->
             })
           when 'whiteListRemove'
             white_list = base.baseState.get('white_list')
-            key = @getKeyByValue(white_list,attr)
+            key = util.getKeyByValue(white_list,attr)
             delete white_list[key]
             code.set("white_list",white_list)
             code.save({
