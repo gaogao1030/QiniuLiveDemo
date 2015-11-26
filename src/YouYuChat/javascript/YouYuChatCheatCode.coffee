@@ -133,28 +133,31 @@ module.exports = ->
                 base.baseState.set("white_list",white_list)
             })
           when 'whiteListRemove'
-            white_list = base.baseState.get('white_list')
-            key = util.getKeyByValue(white_list,attr)
-            delete white_list[key]
-            code.set("white_list",white_list)
-            code.save({
-              success: ->
-                text = "白名单里删除了#{attr}"
-                base.baseState.set("white_list",white_list)
-                base.baseState.get('room').send({
-                  text: text
-                  attr: {
-                    msgLevel: "system"
-                    userReload: key
-                  }
-                },
-                {
-                  type: 'text'
-                },
-                (data) ->
-                  #util.refreshPage({msg:{attr:{reload:true}}})
-                )
-            })
+            @getCheatCode().then ->
+              white_list = base.baseState.get('white_list')
+              key = util.getKeyByValue(white_list,attr)
+              delete white_list[key]
+              code.set("white_list",white_list)
+              code.save({
+                success: ->
+                  text = "白名单里删除了#{attr}"
+                  base.baseState.set("white_list",white_list)
+                  room_name = base.baseState.get('room_name')
+                  base.baseState.get('room').remove("#{room_name}:#{key}")
+                  base.baseState.get('room').send({
+                    text: text
+                    attr: {
+                      msgLevel: "system"
+                      userReload: key
+                    }
+                  },
+                  {
+                    type: 'text'
+                  },
+                  (data) ->
+                    #util.refreshPage({msg:{attr:{reload:true}}})
+                  )
+              })
           when 'whiteListOpen'
             code.set("white_list_open",attr)
             if attr
@@ -215,6 +218,7 @@ module.exports = ->
               online_members = _.without online_members,"qiniuLive:游客"
               console.log online_members.length
             )
+          when 'setLiveSource'
           else
             console.log "no command"
       else

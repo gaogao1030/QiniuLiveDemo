@@ -38,6 +38,7 @@ module.exports = ->
     realtime.on 'kicked',(res) ->
       console.log res
       util.showSystemMsg({msg:"你已经被踢出该房间"})
+      util.refreshPage({msg:{attr:{reload:true}}})
 
     realtime.on 'membersleft',(res) ->
       _.each(res.m,(m)->

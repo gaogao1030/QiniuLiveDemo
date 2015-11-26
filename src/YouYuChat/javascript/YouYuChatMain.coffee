@@ -1,6 +1,7 @@
 YouYuChatBase = require './YouYuChatBase'
 YouYuChatUtil = require './YouYuChatUtil'
 YouYuChatCheatCode = require './YouYuChatCheatCode'
+YouYuChatPlayer = require './YouYuChatPlayer'
 require './YouYuChatExpose'
 visitorAccess = require './YouYuChatVisitor'
 userAccess = require './YouYuChatUser'
@@ -8,6 +9,7 @@ md5 = require 'md5'
 base = new YouYuChatBase
 util = new YouYuChatUtil
 cheat_code = new YouYuChatCheatCode
+player = new YouYuChatPlayer
 
 module.exports = do ->
   registerEvent = ->
@@ -37,6 +39,7 @@ module.exports = do ->
     else
       $(document).trigger("user:started")
     cheat_code.getCheatCode().then(->
+      player.init()
       $coverText = util.elements().coverText
       $coverText.html(base.baseState.get("notice"))
       height = $coverText.height()

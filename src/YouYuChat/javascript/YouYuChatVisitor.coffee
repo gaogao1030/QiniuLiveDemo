@@ -1,7 +1,9 @@
 YouYuChatUtil = require './YouYuChatUtil'
 YouYuChatBase = require './YouYuChatBase'
+YouYuChatCheatCode = require './YouYuChatCheatCode'
 util = new YouYuChatUtil
 base = new YouYuChatBase
+cheat_code = new YouYuChatCheatCode
 
 module.exports = ->
   $(document).on "visitor:started",->
@@ -59,12 +61,13 @@ module.exports = ->
 
   $(document).on "visitor:confirmName:click", ->
     client_id = util.elements().inputNickName.val()
-    if util.inWhiteList(client_id) || !base.baseState.get("white_list_open")
-      base.baseState.set('client_id',client_id)
-      unless util.isEmptyString(client_id)
-        base.closeRealTime base.baseState.get('realtime')
-        util.elements().changeName.modal("hide")
+    cheat_code.getCheatCode().then ->
+      if util.inWhiteList(client_id) || !base.baseState.get("white_list_open")
+        base.baseState.set('client_id',client_id)
+        unless util.isEmptyString(client_id)
+          base.closeRealTime base.baseState.get('realtime')
+          util.elements().changeName.modal("hide")
+        else
+          alert "昵称不能为空"
       else
-        alert "昵称不能为空"
-    else
-      alert "你输入的昵称不在白名单中"
+        alert "你输入的昵称不在白名单中"
