@@ -14,6 +14,12 @@ copy = ->
     )
   )
 
-$p('npm run compile',[],{},->
-    copy()
-  ).out().pipe('git init',[],{cwd: 'publish'}).and('git add .').and('git commit -m "update"')
+$p('rm -rf publish').on 'exit',->
+  copy()
+  $p('npm run compile',[],{}).out()
+  .then('git init',[],{cwd: 'publish'}).out()
+  .then('git remote add origin git@github.com:gaogao1030/QiniuLiveDemo.git',[],{cwd: 'publish'}).out()
+  .then('git checkout -b "publish"',[],{cwd: 'publish'}).out()
+  .then('git add .',[],{cwd: 'publish'}).out()
+  .then('git commit -m "update"',[],{cwd: 'publish'}).out()
+  .then('git push origin publish" -f',[],{cwd: 'publish'}).out()

@@ -5,4 +5,5 @@
 /public/build
 /bower_components
 /publish
-npm-debug.log
+npm-debug.log.*
+
