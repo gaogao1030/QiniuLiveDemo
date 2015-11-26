@@ -4,4 +4,5 @@
 /worker/ping_err.log
 /public/build
 /bower_components
+/publish
 npm-debug.log
