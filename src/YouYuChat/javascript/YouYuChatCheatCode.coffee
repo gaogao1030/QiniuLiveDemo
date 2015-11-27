@@ -21,6 +21,7 @@ module.exports = ->
           base.baseState.set('white_list_open',res[0].attributes.white_list_open)
           base.baseState.set('broad_cast',res[0].attributes.broad_cast)
           base.baseState.set('notice',res[0].attributes.notice)
+          base.baseState.set('live_stream',res[0].attributes.live_stream)
       })
 
 
@@ -218,7 +219,13 @@ module.exports = ->
               online_members = _.without online_members,"qiniuLive:游客"
               console.log online_members.length
             )
-          when 'setLiveSource'
+          when 'setLiveStream'
+            code.set("live_stream",attr)
+            base.baseState.set("live_stream",attr)
+            code.save({
+              success: ->
+                console.log "直播流已设置"
+            })
           else
             console.log "no command"
       else

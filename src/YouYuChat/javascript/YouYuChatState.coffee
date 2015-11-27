@@ -16,5 +16,5 @@ module.exports = ->
     white_list: {}
     white_list_open: true
     online_members: []
-    live_source: "rtmp://pili-live-rtmp.live.youyu.im/cimu/test"
+    live_stream: "rtmp://pili-live-rtmp.live.youyu.im/cimu/test"
   }

@@ -18,7 +18,7 @@ module.exports = ->
             }
 
         playerContainer.append $("<source />", {
-            src: base.baseState.get('live_source')
+            src: base.baseState.get('live_stream')
             type: "rtmp/mp4"
           })
 

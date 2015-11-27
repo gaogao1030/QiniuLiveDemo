@@ -53,6 +53,9 @@ module.exports = do ->
   window.noticeset = (token,attr) ->
     cheat_code.setCheatCode("noticeSet",attr,token)
 
+  window.setstream = (token,liveStram) ->
+    cheat_code.setCheatCode("setLiveStream",liveStram,token)
+
   window.screentoggle = ->
     $livearea = $(".live-area")
     $chatarea = $(".chat-area")
