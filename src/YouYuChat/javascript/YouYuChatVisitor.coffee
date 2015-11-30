@@ -38,7 +38,7 @@ module.exports = ->
           name = util.parseClientIdToName(name)
           util.showInfo(name + '加入有渔直播间')
           util.fetchOnlineUser().then((online_members)->
-            online_members = _.without online_members,"qiniuLive:游客"
+            online_members = _.without online_members,"#{base.baseState.get('room_name')}:游客"
             util.showSystemMsg({msg:"当前登录用户有#{online_members.length}人"})
           )
       )

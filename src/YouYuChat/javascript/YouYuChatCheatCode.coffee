@@ -217,7 +217,7 @@ module.exports = ->
             )
           when 'getOnlineUserCount'
             util.fetchOnlineUser().then((online_members)->
-              online_members = _.without online_members,"qiniuLive:游客"
+              online_members = _.without online_members,"#{base.baseState.get('room_name')}:游客"
               console.log online_members.length
             )
           when 'setLiveStream'
