@@ -20,9 +20,12 @@ fs.exists("publish/.git",(exists) ->
     console.log "exists"
     $p('git reset --hard HEAD',[],{cwd: "publish"}).out()
     .then('git pull origin publish',[],{cwd: "publish"}).out()
-    .then('git add .').out()
-    .then('git commit -m "update"').out()
-    .then('git push origin publish').out()
+    .then('rm -rf publish/pulic').on 'exit',->
+      copy()
+      $p('npm run compile',[],{}).out()
+      .then('git add .',[],{cwd: 'publish'}).out()
+      .then('git commit -m "update"',[],{cwd: 'publish'}).out()
+      .then('git push origin publish',[],{cwd: 'publish'}).out()
     #$p("git checkout publish",[],{cwd: 'publish'}).out()
     #.then('rm -rf publish/public').on 'exit',->
     #  copy()
