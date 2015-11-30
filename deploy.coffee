@@ -26,11 +26,6 @@ fs.exists("publish/.git",(exists) ->
       .then('git add .',[],{cwd: 'publish'}).out()
       .then('git commit -m "update"',[],{cwd: 'publish'}).out()
       .then('git push origin publish',[],{cwd: 'publish'}).out()
-    #$p("git checkout publish",[],{cwd: 'publish'}).out()
-    #.then('rm -rf publish/public').on 'exit',->
-    #  copy()
-    #  $p("git checkout publish").out()
-    #  $p("git pull origin publish").out()
   else
     console.log "non exists"
     $p("mkdir publish").out()
