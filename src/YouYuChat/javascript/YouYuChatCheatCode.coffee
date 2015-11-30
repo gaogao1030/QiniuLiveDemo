@@ -1,5 +1,6 @@
 YouYuChatBase = require './YouYuChatBase'
 YouYuChatUtil = require './YouYuChatUtil'
+Config = require './YouYuChatConfig'
 md5 = require 'md5'
 util = new YouYuChatUtil
 base = new YouYuChatBase
@@ -11,7 +12,7 @@ module.exports = ->
     getCheatCode: ()->
       cheatCode = AV.Object.extend("CheatCode")
       q = new AV.Query(cheatCode)
-      q.equalTo("objectId","563c9abb60b2c82f2b951424")
+      q.equalTo("objectId",Config.cheat_code_id)
       q.find({
         success: (res) =>
           base.baseState.set('notalk',res[0].attributes.notalk)
@@ -28,7 +29,7 @@ module.exports = ->
     setCheatCode: (commnad,attr,permit)->
       permit ||= ""
       if md5(permit) == base.baseState.get("cheat_code_token")
-        code = AV.Object.createWithoutData('CheatCode',"563c9abb60b2c82f2b951424")
+        code = AV.Object.createWithoutData('CheatCode',Config.cheat_code_id)
         switch commnad
           when "shutup"
             base.baseState.set('notalk',false)
@@ -231,4 +232,3 @@ module.exports = ->
       else
         console.log "permit denied"
 }
-

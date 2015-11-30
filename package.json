@@ -33,7 +33,7 @@
     "ignore": "^2.2.19",
     "is-buffer": "^1.1.0",
     "lazy-cache": "^0.2.4",
-    "leancloud-realtime": "^2.3.1",
+    "leancloud-realtime": "^2.3.2",
     "leanengine": "^0.2.0",
     "md5": "^2.0.0",
     "process": "^0.11.2",

@@ -1,11 +1,12 @@
+Config = require './YouYuChatConfig'
 module.exports = ->
   YouYuChatState = {
-    appid: "2PKFqnCxPQ8DWMK2uiRWsQpz"
-    secret: "Db8UOjtkzPgG1RrRHJSOPfth"
+    appid: Config.appid
+    secret: Config.secret
     msgTime: undefined
     logFlag: false
     log: []
-    room_name:"qiniuLive"
+    room_name:"YouYuLive"
     room: undefined
     client_id:"游客"
     #client_id:"gaogao"
