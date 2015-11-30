@@ -2,7 +2,7 @@ Config = require './YouYuChatConfig'
 module.exports = ->
   YouYuChatState = {
     appid: Config.appid
-    secret: Config.secret
+    appkey: Config.appkey
     msgTime: undefined
     logFlag: false
     log: []

@@ -22,7 +22,7 @@ module.exports = ->
 
     getConversation : ->
       promise = new AV.Promise
-      AV.initialize(@baseState.get('appid'),@baseState.get('secret'))
+      AV.initialize(@baseState.get('appid'),@baseState.get('appkey'))
       conv = AV.Object.extend('_conversation')
       q = new AV.Query(conv)
       q.equalTo('attr.room_id',@baseState.get('room_name'))

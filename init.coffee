@@ -4,7 +4,7 @@ process = require 'process'
 md5 = require 'md5'
 Config = require './src/YouYuChat/javascript/YouYuChatConfig'
 State = (require './src/YouYuChat/javascript/YouYuChatState')()
-AV.initialize Config.appid,Config.secret
+AV.initialize Config.appid,Config.appkey
 createCheatCode= ()->
   CheatCode = AV.Object.extend("CheatCode")
   cheat_code = new CheatCode
