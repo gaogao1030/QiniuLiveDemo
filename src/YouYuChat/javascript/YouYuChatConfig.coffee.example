@@ -1,0 +1,6 @@
+module.exports = do ->
+  YouYuChatConfig = {
+    appid: 'app_id'
+    secret: 'secret'
+    cheat_code_id: 'cheat_code_id'
+  }

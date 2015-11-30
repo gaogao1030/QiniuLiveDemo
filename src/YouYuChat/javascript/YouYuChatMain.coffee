@@ -82,7 +82,7 @@ module.exports = do ->
   $(document).on "log:got",->
     util.showChatLog()
     util.fetchOnlineUser().then((online_members)->
-      online_members = _.without online_members,"qiniuLive:游客"
+      online_members = _.without online_members,"#{base.baseState.get('room_name')}:游客"
       util.showSystemMsg({msg:"当前登录用户有#{online_members.length}人"})
     )
     console.log "log got"
@@ -114,7 +114,7 @@ module.exports = do ->
     offline_members = _.filter(members,(member)->
       return member if online_members.indexOf(member) == -1
     )
-    online_members = _.without online_members,"qiniuLive:游客"
+    online_members = _.without online_members,"#{base.baseState.get('room_name')}:游客"
     console.log offline_members
     room.remove(offline_members,->
       console.log "remove done"
@@ -122,5 +122,3 @@ module.exports = do ->
 
   visitorAccess()
   userAccess()
-
-

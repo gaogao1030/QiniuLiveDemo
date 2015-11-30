@@ -14,9 +14,9 @@ createCheatCode= ()->
     'token': md5('hentai')
     'white_list': {}
     'white_list_open': true
-    'broad_cast': ''
-    'notice': ''
-    'live_stream': ''
+    'broad_cast': "<p style='color:#20882f'>发言请输入分配的姓名代码。点击这里下载<a href='http://78rc6t.com1.z0.glb.clouddn.com/FVcJKqVsuPQh/documents/a4fbe4a489444eb5a1dddf8d0d7d164e.zip' target='_blank'> <u>Scratch软件</u> </a>，如直播过程中黑屏，请下载使用<a href='http://78rc6t.com1.z0.glb.clouddn.com/FVcJKqVsuPQh/documents/2c0f7504160e40c28da2371379ec20ab.zip' target='_blank'> <u>谷歌浏览器</u> </a>。</p>"
+    'notice': "<div style='font-size:30px;font-weight:bold;'><p>直播尚未开始</p><p>敬请期待</p></div>"
+    'live_stream': 'rtmp://pili-live-rtmp.live.youyu.im/cimu/test'
   },
   success: (code)->
     console.log "请将objectId:#{code.id}填入到配置文件中的cheat_code_id"

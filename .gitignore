@@ -6,4 +6,4 @@
 /bower_components
 /publish
 npm-debug.log.*
-
+/src/YouYuChat/javascript/YouYuChatConfig.coffee
