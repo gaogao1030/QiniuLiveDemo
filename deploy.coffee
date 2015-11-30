@@ -14,12 +14,19 @@ copy = ->
     )
   )
 
-$p('rm -rf publish').on 'exit',->
-  copy()
-  $p('npm run compile',[],{}).out()
-  .then('git init',[],{cwd: 'publish'}).out()
-  .then('git remote add origin git@github.com:gaogao1030/QiniuLiveDemo.git',[],{cwd: 'publish'}).out()
-  .then('git checkout -b "publish"',[],{cwd: 'publish'}).out()
-  .then('git add .',[],{cwd: 'publish'}).out()
-  .then('git commit -m "update"',[],{cwd: 'publish'}).out()
-  .then('git push origin publish" -f',[],{cwd: 'publish'}).out()
+
+fs.exists("publish",(exists) ->
+  if exists
+    $p("git checkout publish",[],{cwd: 'publish'}).out()
+  else
+    console.log "non exists"
+)
+#$p('rm -rf publish').on 'exit',->
+#  copy()
+#  $p('npm run compile',[],{}).out()
+#  .then('git init',[],{cwd: 'publish'}).out()
+#  .then('git remote add origin git@github.com:gaogao1030/QiniuLiveDemo.git',[],{cwd: 'publish'}).out()
+#  .then('git checkout -b "publish"',[],{cwd: 'publish'}).out()
+#  .then('git add .',[],{cwd: 'publish'}).out()
+#  .then('git commit -m "update"',[],{cwd: 'publish'}).out()
+#  .then('git push origin publish" -f',[],{cwd: 'publish'}).out()
