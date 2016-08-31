@@ -107,6 +107,12 @@ module.exports = ->
             else
               return base.baseState.get("white_list")
           when 'whiteListSet'
+            attr = _.map(attr,(obj)->
+              return {
+                name: obj.name,
+                code: md5(obj.code)
+              }
+            )
             code.set("white_list",attr)
             text = "白名单被重置"
             code.save({
@@ -127,6 +133,12 @@ module.exports = ->
             })
           when 'whiteListAdd'
             white_list = base.baseState.get('white_list')
+            attr = _.map(attr,(obj)->
+              return {
+                name: obj.name,
+                code: md5(obj.code)
+              }
+            )
             white_list = _.extend(white_list,attr)
             code.set("white_list",white_list)
             code.save({
@@ -137,20 +149,20 @@ module.exports = ->
           when 'whiteListRemove'
             @getCheatCode().then ->
               white_list = base.baseState.get('white_list')
-              key = util.getKeyByValue(white_list,attr)
-              delete white_list[key]
+              obj = _.find(white_list,{name: attr})
+              white_list = _.without(white_list,obj)
               code.set("white_list",white_list)
               code.save({
                 success: ->
                   text = "白名单里删除了#{attr}"
                   base.baseState.set("white_list",white_list)
                   room_name = base.baseState.get('room_name')
-                  base.baseState.get('room').remove("#{room_name}:#{key}")
+                  base.baseState.get('room').remove("#{room_name}:#{obj.name}")
                   base.baseState.get('room').send({
                     text: text
                     attr: {
                       msgLevel: "system"
-                      userReload: key
+                      userReload: obj.name
                     }
                   },
                   {

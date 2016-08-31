@@ -1,5 +1,6 @@
 YouYuChatState = require './YouYuChatState'
 youyu_chat_state = new YouYuChatState
+md5 = require 'md5'
 
 module.exports = ->
   YouYuChatBase = {
@@ -13,9 +14,13 @@ module.exports = ->
 
     createRealtime : (client_id)->
       @baseState.set("client_id",client_id) unless _.isUndefined(client_id)
+      if @baseState.get('white_list_open')
+        name = md5(@baseState.get("client_id"))
+      else
+        name = @baseState.get("client_id")
       result = AV.realtime
         appId: @baseState.get('appid')
-        clientId: @baseState.get('room_name') + ':' + @baseState.get("client_id")
+        clientId: @baseState.get('room_name') + ':' + name
         secure: false
       @baseState.set("realtime",result)
       return result
@@ -60,7 +65,7 @@ module.exports = ->
           name: @baseState.get('room_name')
           attr: {room_id: @baseState.get('room_name')}
           members: [
-            @baseState.get('room_name') + ":" + @baseState.get("client_id")
+            @baseState.get('room_name') + ":" + util.parseClientIdToName(@baseState.get("client_id"))
           ]
         },
         (room) =>

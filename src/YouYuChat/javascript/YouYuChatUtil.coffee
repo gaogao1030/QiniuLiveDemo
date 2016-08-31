@@ -1,5 +1,6 @@
 YouYuChatBase = require './YouYuChatBase'
 base = new YouYuChatBase
+md5 = require 'md5'
 module.exports = ->
   YouYuChatUtil = {
     elements: ->
@@ -129,7 +130,9 @@ module.exports = ->
       white_list_open = base.baseState.get('white_list_open')
       white_list = base.baseState.get('white_list')
       if white_list_open
-        name = white_list[client_id]
+        obj =  _.find(white_list,{code: client_id})
+        obj ||=  _.find(white_list,{code: md5(client_id)})
+        name = obj.name unless _.isUndefined obj
         return client_id if _.isUndefined name
         return name
       else
@@ -152,7 +155,7 @@ module.exports = ->
       return _.compact(keys)[0]
 
     inWhiteList: (code) ->
-      return _.has(base.baseState.get("white_list"),code)
+      return !(_.isUndefined(_.find(base.baseState.get("white_list"),{code: md5(code)})))
 
     getSliceCount: ->
       slice_count = []
